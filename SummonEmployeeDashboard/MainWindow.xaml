@@ -11,40 +11,26 @@
             <TabItem.Header>
                 Сотрудники
             </TabItem.Header>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0.8*" />
-            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="0.8*" />
+                </Grid.ColumnDefinitions>
 
-            <ListBox Grid.Column="0" ItemsSource="{Binding People}"
-                 SelectedItem="{Binding SelectedPerson}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="5">
-                            <TextBlock FontSize="18" Text="{Binding Path=FullName}" />
-                            <TextBlock Text="{Binding Path=Post}" />
-                            <TextBlock Text="{Binding Path=Email}" />
-                            <TextBlock Text="{Binding Path=Phone}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <StackPanel Grid.Column="1" DataContext="{Binding SelectedPerson}">
-                <TextBlock Text="Имя" />
-                <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Фамилия" />
-                <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Отчество" />
-                <TextBox Text="{Binding Patronymic, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Должность" />
-                <TextBox Text="{Binding Post, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Email" />
-                <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Телефон" />
-                <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
+                <ListBox Grid.Column="0" ItemsSource="{Binding People}"
+                     SelectedItem="{Binding SelectedPerson}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5">
+                                <TextBlock FontSize="18" Text="{Binding Path=FullName}" />
+                                <TextBlock Text="{Binding Path=Post}" />
+                                <TextBlock Text="{Binding Path=Email}" />
+                                <TextBlock Text="{Binding Path=Phone}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <local:PersonEditor Grid.Column="1" DataContext="{Binding SelectedPerson}"/>
             </Grid>
         </TabItem>
     </TabControl>

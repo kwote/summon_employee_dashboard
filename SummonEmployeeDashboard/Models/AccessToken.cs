@@ -6,32 +6,33 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SummonEmployeeDashboard
+namespace SummonEmployeeDashboard.Models
 {
-    class Person : INotifyPropertyChanged
+    class AccessToken : INotifyPropertyChanged
     {
         private int id;
-        public int Id { get => id; set
+        public int Id
+        {
+            get => id; set
             {
                 id = value;
                 OnPropertyChanged("Id");
             }
         }
-        public string FullName
+        public int? TTL { get; set; }
+        public string Created { get; set; }
+        public int UserId { get; set; }
+        public Person Person { get; set; }
+        public bool Expired
         {
             get
             {
-                return FirstName + " " + (Patronymic != null ? Patronymic + " " : "") + LastName;
+                var created = DateTime.Parse(Created);
+                var now = DateTime.Now;
+                created.AddSeconds((double)TTL);
+                return created < now;
             }
         }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Patronymic { get; set; }
-        public string Post { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public int? DepartmentId { get; set; }
-        public string LastActiveTime { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SummonEmployeeDashboard.Rest;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -33,9 +34,14 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        public MainViewModel(List<Person> people)
+        public MainViewModel()
         {
-            People = new ObservableCollection<Person>(people);
+            Initialize();
+        }
+
+        private async void Initialize()
+        {
+            People = new ObservableCollection<Person>(await ((App)App.Current).GetService<PeopleService>().ListPeople(1));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
