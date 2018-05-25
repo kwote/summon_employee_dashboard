@@ -5,7 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
 using RestSharp;
+using SummonEmployeeDashboard.Models;
 using SummonEmployeeDashboard.Rest;
 
 namespace SummonEmployeeDashboard
@@ -16,12 +18,51 @@ namespace SummonEmployeeDashboard
     public partial class App : Application
     {
         private IRestClient client = new RestClient("http://192.168.1.12:3000/api/");
-        public IRestClient RestService {
-            get {
-                return client;
+
+        private AccessToken accessToken = null;
+        internal AccessToken AccessToken {
+            get
+            {
+                if (accessToken == null)
+                {
+                    accessToken = ReadAccessToken();
+                }
+                return accessToken;
+            }
+            set
+            {
+                accessToken = value;
+                SaveAccessToken(accessToken);
             }
         }
 
+        private AccessToken ReadAccessToken()
+        {
+            var tokenStr = SummonEmployeeDashboard.Properties.Settings.Default.AccessToken;
+            if (tokenStr == string.Empty)
+            {
+                return null;
+            }
+            var token = JsonConvert.DeserializeObject<AccessToken>(tokenStr);
+            if (token.Expired)
+            {
+                return null;
+            }
+            return token;
+        }
+
+        private void SaveAccessToken(AccessToken accessToken)
+        {
+            var tokenStr = JsonConvert.SerializeObject(accessToken);
+            SummonEmployeeDashboard.Properties.Settings.Default.AccessToken = tokenStr;
+            SummonEmployeeDashboard.Properties.Settings.Default.Save();
+        }
+
         public T GetService<T>() where T : IRestService, new() => new T { Client = client };
+
+        public static App GetApp()
+        {
+            return (App)App.Current;
+        }
     }
 }

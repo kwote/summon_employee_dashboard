@@ -10,8 +10,8 @@ namespace SummonEmployeeDashboard.Models
 {
     class AccessToken : INotifyPropertyChanged
     {
-        private int id;
-        public int Id
+        private string id;
+        public string Id
         {
             get => id; set
             {
@@ -22,7 +22,7 @@ namespace SummonEmployeeDashboard.Models
         public int? TTL { get; set; }
         public string Created { get; set; }
         public int UserId { get; set; }
-        public Person Person { get; set; }
+        public Person User { get; set; }
         public bool Expired
         {
             get
@@ -30,7 +30,7 @@ namespace SummonEmployeeDashboard.Models
                 var created = DateTime.Parse(Created);
                 var now = DateTime.Now;
                 created.AddSeconds((double)TTL);
-                return created < now;
+                return created > now;
             }
         }
 

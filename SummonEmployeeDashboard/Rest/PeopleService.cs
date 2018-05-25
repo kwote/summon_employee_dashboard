@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using SummonEmployeeDashboard.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,27 @@ namespace SummonEmployeeDashboard.Rest
 
         public IRestClient Client { get; set; }
 
-        public async Task<List<Person>> ListPeople(int departmentId)
+        public async Task<List<Person>> ListPeople(int? departmentId)
         {
             var request = new RestRequest("people");
-            request.AddQueryParameter("departmentId", departmentId.ToString());
+            if (departmentId != null)
+            {
+                request.AddQueryParameter("departmentId", departmentId.ToString());
+            }
             var response = await Client.ExecuteTaskAsync<List<Person>>(request);
+            return response.Data;
+        }
+
+        public async Task<AccessToken> Login(LoginCredentials credentials)
+        {
+            var request = new RestRequest("people/login")
+            {
+                Method = Method.POST
+            };
+            request.JsonSerializer = new CustomJsonSerializer();
+            request.AddJsonBody(credentials);
+            request.AddQueryParameter("include", "user");
+            var response = await Client.ExecuteTaskAsync<AccessToken>(request);
             return response.Data;
         }
     }

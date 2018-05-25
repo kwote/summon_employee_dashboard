@@ -1,4 +1,6 @@
-﻿using SummonEmployeeDashboard.Rest;
+﻿using Newtonsoft.Json;
+using SummonEmployeeDashboard.Models;
+using SummonEmployeeDashboard.Rest;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,14 +36,25 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        public MainViewModel()
+        public Action CloseAction { get; set; }
+
+        public MainViewModel(Action closeAction)
         {
+            CloseAction = closeAction;
             Initialize();
         }
 
         private async void Initialize()
         {
-            People = new ObservableCollection<Person>(await ((App)App.Current).GetService<PeopleService>().ListPeople(1));
+            if (App.GetApp().AccessToken == null)
+            {
+                var loginWindow = new LoginWindow();
+                loginWindow.Show();
+                CloseAction();
+                return;
+            }
+            var departmentId = App.GetApp().AccessToken.User.DepartmentId;
+            People = new ObservableCollection<Person>(await App.GetApp().GetService<PeopleService>().ListPeople(departmentId));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

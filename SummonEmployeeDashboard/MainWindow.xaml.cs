@@ -25,34 +25,13 @@ namespace SummonEmployeeDashboard
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel viewModel = new MainViewModel();
+        private MainViewModel viewModel;
         public MainWindow()
         {
             InitializeComponent();
-            var accessToken = ReadAccessToken();
-            if (accessToken == null)
-            {
-                var loginWindow = new LoginWindow();
-                loginWindow.Show();
-                Close();
-            }
 
+            viewModel = new MainViewModel(new Action(Close));
             peopleTab.DataContext = viewModel;
-        }
-
-        private AccessToken ReadAccessToken()
-        {
-            var tokenStr = Properties.Settings.Default.AccessToken;
-            if (tokenStr == string.Empty)
-            {
-                return null;
-            }
-            var token = SimpleJson.SimpleJson.DeserializeObject<AccessToken>(tokenStr);
-            if (token.Expired)
-            {
-                return null;
-            }
-            return token;
         }
     }
 }
