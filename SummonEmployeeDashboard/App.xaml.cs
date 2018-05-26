@@ -44,7 +44,7 @@ namespace SummonEmployeeDashboard
                 return null;
             }
             var token = JsonConvert.DeserializeObject<AccessToken>(tokenStr);
-            if (token.Expired)
+            if (token.Expired())
             {
                 return null;
             }

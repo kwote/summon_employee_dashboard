@@ -5,18 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SummonEmployeeDashboard"
         mc:Ignorable="d"
-        Title="Логин" Height="200" Width="300">
+        Title="Логин" Height="220" Width="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="0.4*" />
+            <RowDefinition Height="0.5*" />
         </Grid.RowDefinitions>
         <StackPanel Margin="25" Grid.Row="0" DataContext="{Binding Credentials}">
             <TextBlock Text="Email" />
             <TextBox Text="{Binding Path=Email, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="Пароль" />
-            <TextBox Text="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged}" />
+            <PasswordBox Name="passwordBox" PasswordChanged="PasswordBox_PasswordChanged"/>
         </StackPanel>
-        <Button Content="Логин" Grid.Row="1" Command="{Binding LoginCommand}" Margin="25,10"/>
+        <StackPanel Grid.Row="1">
+            <Button Content="Логин" Command="{Binding LoginCommand}" Margin="25,10,25,0"/>
+            <Label Name="registerPerson">
+                <Hyperlink Command="{Binding RegisterCommand}">Зарегистрироваться</Hyperlink>
+            </Label>
+        </StackPanel>
     </Grid>
 </Window>

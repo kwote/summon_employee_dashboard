@@ -16,15 +16,15 @@ using System.Windows.Shapes;
 namespace SummonEmployeeDashboard
 {
     /// <summary>
-    /// Логика взаимодействия для LoginWindow.xaml
+    /// Логика взаимодействия для RegisterWindow.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class RegisterWindow : Window
     {
-        private LoginViewModel viewModel;
-        public LoginWindow()
+        private RegisterViewModel viewModel;
+        public RegisterWindow()
         {
             InitializeComponent();
-            viewModel = new LoginViewModel(new Action(Close));
+            viewModel = new RegisterViewModel(new Action(Close));
             DataContext = viewModel;
         }
 
@@ -33,6 +33,14 @@ namespace SummonEmployeeDashboard
             if (DataContext != null)
             {
                 ((dynamic)DataContext).Password = ((PasswordBox)sender).Password;
+            }
+        }
+
+        private void PasswordConfirm_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext != null)
+            {
+                ((dynamic)DataContext).PasswordConfirm = ((PasswordBox)sender).Password;
             }
         }
     }

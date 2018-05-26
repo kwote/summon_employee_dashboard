@@ -39,5 +39,17 @@ namespace SummonEmployeeDashboard.Rest
             var response = await Client.ExecuteTaskAsync<AccessToken>(request);
             return response.Data;
         }
+
+        public async Task<Person> Register(RegisterPerson registerPerson)
+        {
+            var request = new RestRequest("people")
+            {
+                Method = Method.POST
+            };
+            request.JsonSerializer = new CustomJsonSerializer();
+            request.AddJsonBody(registerPerson);
+            var response = await Client.ExecuteTaskAsync<Person>(request);
+            return response.Data;
+        }
     }
 }

@@ -23,15 +23,12 @@ namespace SummonEmployeeDashboard.Models
         public string Created { get; set; }
         public int UserId { get; set; }
         public Person User { get; set; }
-        public bool Expired
+        public bool Expired()
         {
-            get
-            {
-                var created = DateTime.Parse(Created);
-                var now = DateTime.Now;
-                created.AddSeconds((double)TTL);
-                return created > now;
-            }
+            var created = DateTime.Parse(Created);
+            var now = DateTime.Now;
+            created = created.AddSeconds((double)TTL);
+            return created < now;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

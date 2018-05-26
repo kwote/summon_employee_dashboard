@@ -9,14 +9,13 @@ using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard
 {
-    class Person : INotifyPropertyChanged
+    class RegisterPerson : INotifyPropertyChanged
     {
-        private int _id;
         public string FullName
         {
             get
             {
-                return FirstName + " " + (Patronymic != string.Empty ? Patronymic + " " : "") + LastName;
+                return FirstName + " " + (Patronymic != null ? Patronymic + " " : "") + LastName;
             }
         }
 
@@ -27,17 +26,6 @@ namespace SummonEmployeeDashboard
         private string _email = "";
         private string _phone = "";
         private int? _departmentId;
-        private string _lastActiveTime = "";
-
-        [JsonProperty(PropertyName = "id")]
-        public int Id
-        {
-            get => _id; set
-            {
-                _id = value;
-                OnPropertyChanged("Id");
-            }
-        }
         [JsonProperty(PropertyName = "firstname")]
         public string FirstName
         {
@@ -101,13 +89,14 @@ namespace SummonEmployeeDashboard
                 OnPropertyChanged("DepartmentId");
             }
         }
-        [JsonProperty(PropertyName = "lastActiveTime")]
-        public string LastActiveTime
+        private string _password = "";
+        [JsonProperty(PropertyName = "password")]
+        public string Password
         {
-            get => _lastActiveTime; set
+            get => _password; set
             {
-                _lastActiveTime = value;
-                OnPropertyChanged("LastActiveTime");
+                _password = value;
+                OnPropertyChanged("Password");
             }
         }
 

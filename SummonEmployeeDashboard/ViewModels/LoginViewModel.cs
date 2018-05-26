@@ -21,11 +21,12 @@ namespace SummonEmployeeDashboard.ViewModels
             set
             {
                 credentials = value;
-                OnPropertyChanged("SelectedPerson");
+                OnPropertyChanged("Credentials");
             }
         }
 
         public Action CloseAction { get; set; }
+        public string Password { get => Credentials.Password; set => Credentials.Password = value; }
 
         public LoginViewModel(Action action)
         {
@@ -47,11 +48,28 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (loginCommand == null)
                 {
                     loginCommand = new RelayCommand(
-                        async param => await this.LoginAsync(),
-                        param => this.CanLogin()
+                        async param => await LoginAsync(),
+                        param => CanLogin()
                     );
                 }
                 return loginCommand;
+            }
+        }
+
+        private ICommand registerCommand;
+
+        public ICommand RegisterCommand
+        {
+            get
+            {
+                if (registerCommand == null)
+                {
+                    registerCommand = new RelayCommand(
+                        param => Register(),
+                        param => true
+                    );
+                }
+                return registerCommand;
             }
         }
 
@@ -78,6 +96,13 @@ namespace SummonEmployeeDashboard.ViewModels
                 mainWindow.Show();
                 CloseAction();
             }
+        }
+
+        private void Register()
+        {
+            var registerWindow = new RegisterWindow();
+            registerWindow.Show();
+            CloseAction();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
