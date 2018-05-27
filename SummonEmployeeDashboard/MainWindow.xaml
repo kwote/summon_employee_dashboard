@@ -33,5 +33,37 @@
                 <local:PersonEditor Grid.Column="1" DataContext="{Binding SelectedPerson}"/>
             </Grid>
         </TabItem>
+        <TabItem x:Name="incomingTab">
+            <TabItem.Header>
+                Входящие
+            </TabItem.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="0.8*" />
+                </Grid.ColumnDefinitions>
+
+                <ListBox Grid.Column="0" ItemsSource="{Binding Requests}"
+                     SelectedItem="{Binding SelectedRequest}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5">
+                                <TextBlock Text="{Binding Path=CallerId}" />
+                                <TextBlock Text="{Binding Path=TargetId}" />
+                                <TextBlock Text="{Binding Path=RequestTime}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <StackPanel Grid.Column="1" DataContext="{Binding SelectedRequest}">
+                    <TextBlock Text="Caller" />
+                    <TextBox Text="{Binding Path=CallerId, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="Target" />
+                    <TextBox Text="{Binding Path=TargetId, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="Requested" />
+                    <TextBox Text="{Binding Path=RequestTime, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Grid>
+        </TabItem>
     </TabControl>
 </Window>

@@ -10,19 +10,52 @@ namespace SummonEmployeeDashboard.Models
 {
     class AccessToken : INotifyPropertyChanged
     {
-        private string id;
+        private string _id;
+        private int? _ttl;
+        private string _created;
+        private int _userId;
+        private Person _user;
+
         public string Id
         {
-            get => id; set
+            get => _id; set
             {
-                id = value;
+                _id = value;
                 OnPropertyChanged("Id");
             }
         }
-        public int? TTL { get; set; }
-        public string Created { get; set; }
-        public int UserId { get; set; }
-        public Person User { get; set; }
+        public int? TTL
+        {
+            get => _ttl; set
+            {
+                _ttl = value;
+                OnPropertyChanged("TTL");
+            }
+        }
+        public string Created
+        {
+            get => _created; set
+            {
+                _created = value;
+                OnPropertyChanged("Created");
+            }
+        }
+        public int UserId
+        {
+            get => _userId; set
+            {
+                _userId = value;
+                OnPropertyChanged("UserId");
+            }
+        }
+        public Person User
+        {
+            get => _user; set
+            {
+                _user = value;
+                OnPropertyChanged("User");
+            }
+        }
         public bool Expired()
         {
             var created = DateTime.Parse(Created);

@@ -14,28 +14,6 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        private Person selectedPerson;
-        public Person SelectedPerson
-        {
-            get { return selectedPerson; }
-            set
-            {
-                selectedPerson = value;
-                OnPropertyChanged("SelectedPerson");
-            }
-        }
-
-        private ObservableCollection<Person> people;
-        public ObservableCollection<Person> People {
-            get {
-                return people;
-            }
-            set {
-                people = value;
-                OnPropertyChanged("People");
-            }
-        }
-
         public Action CloseAction { get; set; }
 
         public MainViewModel(Action closeAction)
@@ -44,17 +22,14 @@ namespace SummonEmployeeDashboard.ViewModels
             Initialize();
         }
 
-        private async void Initialize()
+        private void Initialize()
         {
             if (App.GetApp().AccessToken == null)
             {
                 var loginWindow = new LoginWindow();
                 loginWindow.Show();
                 CloseAction();
-                return;
             }
-            var departmentId = App.GetApp().AccessToken.User.DepartmentId;
-            People = new ObservableCollection<Person>(await App.GetApp().GetService<PeopleService>().ListPeople(departmentId));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

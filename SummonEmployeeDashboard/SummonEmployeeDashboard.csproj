@@ -64,6 +64,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\RegisterPerson.cs" />
+    <Compile Include="Models\SummonRequest.cs" />
     <Compile Include="RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
     </Compile>
@@ -75,6 +76,8 @@
     </Compile>
     <Compile Include="Rest\IRestService.cs" />
     <Compile Include="Rest\PeopleService.cs" />
+    <Compile Include="ViewModels\RequestsViewModel.cs" />
+    <Compile Include="ViewModels\PeopleViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
