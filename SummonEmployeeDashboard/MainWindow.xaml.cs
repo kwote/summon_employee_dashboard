@@ -32,7 +32,6 @@ namespace SummonEmployeeDashboard
 
             viewModel = new MainViewModel(new Action(Close));
             DataContext = viewModel;
-            peopleTab.DataContext = new PeopleViewModel();
         }
     }
 }

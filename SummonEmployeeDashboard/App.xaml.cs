@@ -17,7 +17,7 @@ namespace SummonEmployeeDashboard
     /// </summary>
     public partial class App : Application
     {
-        private IRestClient client = new RestClient("http://192.168.1.12:3000/api/");
+        private IRestClient client = new RestClient("http://192.168.1.25:3000/api/");
 
         private AccessToken accessToken = null;
         internal AccessToken AccessToken {
@@ -43,12 +43,7 @@ namespace SummonEmployeeDashboard
             {
                 return null;
             }
-            var token = JsonConvert.DeserializeObject<AccessToken>(tokenStr);
-            if (token.Expired())
-            {
-                return null;
-            }
-            return token;
+            return JsonConvert.DeserializeObject<AccessToken>(tokenStr);
         }
 
         private void SaveAccessToken(AccessToken accessToken)

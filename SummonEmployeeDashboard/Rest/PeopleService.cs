@@ -8,23 +8,21 @@ using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard.Rest
 {
-    class PeopleService : IRestService
+    class PeopleService : RestService
     {
         public PeopleService()
         {
         }
 
-        public IRestClient Client { get; set; }
-
-        public async Task<List<Person>> ListPeople(int? departmentId)
+        public async Task<List<Person>> ListPeople(int? departmentId, string accessToken)
         {
             var request = new RestRequest("people");
             if (departmentId != null)
             {
                 request.AddQueryParameter("departmentId", departmentId.ToString());
             }
-            var response = await Client.ExecuteTaskAsync<List<Person>>(request);
-            return response.Data;
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<List<Person>>(request);
         }
 
         public async Task<AccessToken> Login(LoginCredentials credentials)
@@ -36,8 +34,17 @@ namespace SummonEmployeeDashboard.Rest
             request.JsonSerializer = new CustomJsonSerializer();
             request.AddJsonBody(credentials);
             request.AddQueryParameter("include", "user");
-            var response = await Client.ExecuteTaskAsync<AccessToken>(request);
-            return response.Data;
+            return await RestCall<AccessToken>(request);
+        }
+
+        public async Task<Boolean> Ping(string accessToken)
+        {
+            var request = new RestRequest("people/ping")
+            {
+                Method = Method.PUT
+            };
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<Boolean>(request);
         }
 
         public async Task<Person> Register(RegisterPerson registerPerson)
@@ -48,8 +55,7 @@ namespace SummonEmployeeDashboard.Rest
             };
             request.JsonSerializer = new CustomJsonSerializer();
             request.AddJsonBody(registerPerson);
-            var response = await Client.ExecuteTaskAsync<Person>(request);
-            return response.Data;
+            return await RestCall<Person>(request);
         }
     }
 }

@@ -38,10 +38,7 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void Initialize()
         {
-            registerPerson = new RegisterPerson()
-            {
-                DepartmentId = 1
-            };
+            registerPerson = new RegisterPerson();
         }
 
         private ICommand registerCommand;

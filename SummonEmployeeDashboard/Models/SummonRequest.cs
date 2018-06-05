@@ -19,9 +19,9 @@ namespace SummonEmployeeDashboard.Models
         private int? id;
         private int callerId;
         private int targetId;
-        private string requestTime;
-        private string responseTime;
-        private RequestStatus status;
+        private string requested;
+        private string responded;
+        private RequestStatus state;
         private bool enabled;
 
         public int? Id
@@ -48,28 +48,28 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("TargetId");
             }
         }
-        public string RequestTime
+        public string Requested
         {
-            get => requestTime; set
+            get => requested; set
             {
-                requestTime = value;
-                OnPropertyChanged("RequestTime");
+                requested = value;
+                OnPropertyChanged("Requested");
             }
         }
-        public string ResponseTime
+        public string Responded
         {
-            get => responseTime; set
+            get => responded; set
             {
-                responseTime = value;
-                OnPropertyChanged("ResponseTime");
+                responded = value;
+                OnPropertyChanged("Responded");
             }
         }
-        public RequestStatus Status
+        public RequestStatus State
         {
-            get => status; set
+            get => state; set
             {
-                status = value;
-                OnPropertyChanged("Status");
+                state = value;
+                OnPropertyChanged("State");
             }
         }
         public bool Enabled

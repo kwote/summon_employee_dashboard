@@ -26,7 +26,6 @@ namespace SummonEmployeeDashboard
         private string _post = "";
         private string _email = "";
         private string _phone = "";
-        private int? _departmentId;
         private string _lastActiveTime = "";
 
         [JsonProperty(PropertyName = "id")]
@@ -90,15 +89,6 @@ namespace SummonEmployeeDashboard
             {
                 _phone = value;
                 OnPropertyChanged("Phone");
-            }
-        }
-        [JsonProperty(PropertyName = "departmentId")]
-        public int? DepartmentId
-        {
-            get => _departmentId; set
-            {
-                _departmentId = value;
-                OnPropertyChanged("DepartmentId");
             }
         }
         [JsonProperty(PropertyName = "lastActiveTime")]

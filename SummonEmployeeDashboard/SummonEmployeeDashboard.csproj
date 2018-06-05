@@ -76,6 +76,7 @@
     </Compile>
     <Compile Include="Rest\IRestService.cs" />
     <Compile Include="Rest\PeopleService.cs" />
+    <Compile Include="Rest\RestService.cs" />
     <Compile Include="ViewModels\RequestsViewModel.cs" />
     <Compile Include="ViewModels\PeopleViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />

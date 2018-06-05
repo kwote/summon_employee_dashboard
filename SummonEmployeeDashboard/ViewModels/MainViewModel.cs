@@ -16,20 +16,61 @@ namespace SummonEmployeeDashboard.ViewModels
     {
         public Action CloseAction { get; set; }
 
+        private PeopleViewModel peopleVM;
+        public PeopleViewModel PeopleVM
+        {
+            get { return peopleVM; } set
+            {
+                peopleVM = value;
+                OnPropertyChanged("PeopleVM");
+            }
+        }
+
         public MainViewModel(Action closeAction)
         {
             CloseAction = closeAction;
             Initialize();
         }
 
-        private void Initialize()
+        private async void Initialize()
         {
-            if (App.GetApp().AccessToken == null)
+            var accessToken = App.GetApp().AccessToken;
+            if (accessToken == null)
             {
-                var loginWindow = new LoginWindow();
-                loginWindow.Show();
-                CloseAction();
+                Login();
             }
+            else
+            {
+                await PingAsync(accessToken.Id);
+            }
+        }
+
+        private async Task PingAsync(string accessToken)
+        {
+            try
+            {
+                var isValid = await App.GetApp().GetService<PeopleService>().Ping(accessToken);
+                if (isValid)
+                {
+                    PeopleVM = new PeopleViewModel();
+                }
+                else
+                {
+                    var loginWindow = new LoginWindow();
+                    loginWindow.Show();
+                    CloseAction();
+                }
+            } catch (Exception)
+            {
+                Login();
+            }
+        }
+
+        private void Login()
+        {
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            CloseAction();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

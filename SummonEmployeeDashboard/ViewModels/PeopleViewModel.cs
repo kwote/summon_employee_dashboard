@@ -45,8 +45,7 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             AccessToken accessToken = App.GetApp().AccessToken;
             if (accessToken == null) return;
-            var departmentId = accessToken.User.DepartmentId;
-            People = new ObservableCollection<Person>(await App.GetApp().GetService<PeopleService>().ListPeople(departmentId));
+            People = new ObservableCollection<Person>(await App.GetApp().GetService<PeopleService>().ListPeople(null, accessToken.Id));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

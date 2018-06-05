@@ -22,10 +22,8 @@ namespace SummonEmployeeDashboard
         private string _firstName = "";
         private string _lastName = "";
         private string _patronymic = "";
-        private string _post = "";
         private string _email = "";
         private string _phone = "";
-        private int? _departmentId;
         [JsonProperty(PropertyName = "firstname")]
         public string FirstName
         {
@@ -53,15 +51,6 @@ namespace SummonEmployeeDashboard
                 OnPropertyChanged("Patronymic");
             }
         }
-        [JsonProperty(PropertyName = "post")]
-        public string Post
-        {
-            get => _post; set
-            {
-                _post = value;
-                OnPropertyChanged("Post");
-            }
-        }
         [JsonProperty(PropertyName = "email")]
         public string Email
         {
@@ -78,15 +67,6 @@ namespace SummonEmployeeDashboard
             {
                 _phone = value;
                 OnPropertyChanged("Phone");
-            }
-        }
-        [JsonProperty(PropertyName = "departmentId")]
-        public int? DepartmentId
-        {
-            get => _departmentId; set
-            {
-                _departmentId = value;
-                OnPropertyChanged("DepartmentId");
             }
         }
         private string _password = "";
