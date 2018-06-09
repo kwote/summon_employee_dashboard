@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard.Models
 {
-    enum RequestStatus
+    enum RequestState
     {
         Pending = 0,
         Accepted = 1,
@@ -17,12 +17,12 @@ namespace SummonEmployeeDashboard.Models
     class SummonRequest : INotifyPropertyChanged
     {
         private int? id;
-        private int callerId;
-        private int targetId;
         private string requested;
         private string responded;
-        private RequestStatus state;
+        private RequestState state;
         private bool enabled;
+        private Person caller;
+        private Person target;
 
         public int? Id
         {
@@ -32,20 +32,20 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("Id");
             }
         }
-        public int CallerId
-        {
-            get => callerId; set
+        public int CallerId { get; set; }
+        public Person Caller { get => caller; set
             {
-                callerId = value;
-                OnPropertyChanged("CallerId");
+                caller = value;
+                OnPropertyChanged("Caller");
             }
         }
-        public int TargetId
+        public int TargetId { get; set; }
+        public Person Target
         {
-            get => targetId; set
+            get => target; set
             {
-                targetId = value;
-                OnPropertyChanged("TargetId");
+                target = value;
+                OnPropertyChanged("Target");
             }
         }
         public string Requested
@@ -64,7 +64,7 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("Responded");
             }
         }
-        public RequestStatus State
+        public RequestState State
         {
             get => state; set
             {

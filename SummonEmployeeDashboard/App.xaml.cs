@@ -17,7 +17,7 @@ namespace SummonEmployeeDashboard
     /// </summary>
     public partial class App : Application
     {
-        private IRestClient client = new RestClient("http://192.168.1.25:3000/api/");
+        private IRestClient client = new RestClient("http://localhost:3000/api/");
 
         private AccessToken accessToken = null;
         internal AccessToken AccessToken {

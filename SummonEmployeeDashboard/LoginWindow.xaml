@@ -9,15 +9,17 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="0.2*" />
             <RowDefinition Height="0.5*" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="25" Grid.Row="0" DataContext="{Binding Credentials}">
+        <StackPanel Margin="25,25,25,0" Grid.Row="0" DataContext="{Binding Credentials}">
             <TextBlock Text="Email" />
             <TextBox Text="{Binding Path=Email, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="Пароль" />
             <PasswordBox Name="passwordBox" PasswordChanged="PasswordBox_PasswordChanged"/>
         </StackPanel>
-        <StackPanel Grid.Row="1">
+        <TextBlock Grid.Row="1" Text="{Binding Error}" HorizontalAlignment="Center" Foreground="Red"/>
+        <StackPanel Grid.Row="2">
             <Button Content="Логин" Command="{Binding LoginCommand}" Margin="25,10,25,0"/>
             <Label Name="registerPerson">
                 <Hyperlink Command="{Binding RegisterCommand}">Зарегистрироваться</Hyperlink>

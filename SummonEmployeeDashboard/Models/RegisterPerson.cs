@@ -24,6 +24,7 @@ namespace SummonEmployeeDashboard
         private string _patronymic = "";
         private string _email = "";
         private string _phone = "";
+        private string _post = "";
         [JsonProperty(PropertyName = "firstname")]
         public string FirstName
         {
@@ -67,6 +68,15 @@ namespace SummonEmployeeDashboard
             {
                 _phone = value;
                 OnPropertyChanged("Phone");
+            }
+        }
+        [JsonProperty(PropertyName = "post")]
+        public string Post
+        {
+            get => _post; set
+            {
+                _post = value;
+                OnPropertyChanged("Post");
             }
         }
         private string _password = "";

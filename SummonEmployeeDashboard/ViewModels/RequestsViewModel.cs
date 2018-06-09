@@ -37,6 +37,8 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        public bool Incoming { get; set; }
+
         public RequestsViewModel()
         {
             Initialize();

@@ -25,6 +25,14 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<List<Person>>(request);
         }
 
+        public async Task<Person> GetPerson(int personId, string accessToken)
+        {
+            var request = new RestRequest("people");
+            request.AddUrlSegment("id", personId);
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<Person>(request);
+        }
+
         public async Task<AccessToken> Login(LoginCredentials credentials)
         {
             var request = new RestRequest("people/login")
@@ -35,6 +43,17 @@ namespace SummonEmployeeDashboard.Rest
             request.AddJsonBody(credentials);
             request.AddQueryParameter("include", "user");
             return await RestCall<AccessToken>(request);
+        }
+
+        public async Task<string> Logout(string accessToken)
+        {
+            var request = new RestRequest("people/logout")
+            {
+                Method = Method.POST
+            };
+            request.AddHeader("Authorization", accessToken);
+            request.JsonSerializer = new CustomJsonSerializer();
+            return await RestCall(request);
         }
 
         public async Task<Boolean> Ping(string accessToken)
@@ -56,6 +75,24 @@ namespace SummonEmployeeDashboard.Rest
             request.JsonSerializer = new CustomJsonSerializer();
             request.AddJsonBody(registerPerson);
             return await RestCall<Person>(request);
+        }
+
+        public async Task<List<SummonRequest>> ListIncomingRequests(int targetId, string accessToken)
+        {
+            var request = new RestRequest("people");
+            request.AddUrlSegment("id", targetId);
+            request.AddQueryParameter("filter[include]", "caller");
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<List<SummonRequest>>(request);
+        }
+
+        public async Task<List<SummonRequest>> listOutgoingRequests(int callerId, string accessToken)
+        {
+            var request = new RestRequest("people");
+            request.AddUrlSegment("id", callerId);
+            request.AddQueryParameter("filter[include]", "target");
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<List<SummonRequest>>(request);
         }
     }
 }

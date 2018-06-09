@@ -28,6 +28,17 @@ namespace SummonEmployeeDashboard.ViewModels
         public string Password { get => RegisterPerson.Password; set => RegisterPerson.Password = value; }
         public string PasswordConfirm { get; set; }
 
+        private string error;
+        public string Error
+        {
+            get { return error; }
+            set
+            {
+                error = value;
+                OnPropertyChanged("Error");
+            }
+        }
+
         public Action CloseAction { get; set; }
 
         public RegisterViewModel(Action action)
@@ -99,12 +110,18 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async Task RegisterAsync()
         {
-            var person = await App.GetApp().GetService<PeopleService>().Register(registerPerson);
-            if (person != null)
+            try
             {
-                var loginWindow = new LoginWindow();
-                loginWindow.Show();
-                CloseAction();
+                var person = await App.GetApp().GetService<PeopleService>().Register(registerPerson);
+                if (person != null)
+                {
+                    var loginWindow = new LoginWindow();
+                    loginWindow.Show();
+                    CloseAction();
+                }
+            } catch (Exception e)
+            {
+                Error = e.Message;
             }
         }
 

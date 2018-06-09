@@ -25,6 +25,17 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        private string error;
+        public string Error
+        {
+            get { return error; }
+            set
+            {
+                error = value;
+                OnPropertyChanged("Error");
+            }
+        }
+
         public Action CloseAction { get; set; }
         public string Password { get => Credentials.Password; set => Credentials.Password = value; }
 
@@ -88,13 +99,19 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async Task LoginAsync()
         {
-            var accessToken = await App.GetApp().GetService<PeopleService>().Login(credentials);
-            if (accessToken != null)
+            try
             {
-                App.GetApp().AccessToken = accessToken;
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
-                CloseAction();
+                var accessToken = await App.GetApp().GetService<PeopleService>().Login(credentials);
+                if (accessToken != null)
+                {
+                    App.GetApp().AccessToken = accessToken;
+                    var mainWindow = new MainWindow();
+                    mainWindow.Show();
+                    CloseAction();
+                }
+            } catch (Exception e)
+            {
+                Error = e.Message;
             }
         }
 
