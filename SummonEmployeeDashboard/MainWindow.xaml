@@ -7,63 +7,23 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <TabControl x:Name="main">
-        <TabItem x:Name="peopleTab" DataContext="{Binding PeopleVM}">
+        <TabItem x:Name="peopleTab">
             <TabItem.Header>
                 Сотрудники
             </TabItem.Header>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="0.8*" />
-                </Grid.ColumnDefinitions>
-
-                <ListBox Grid.Column="0" ItemsSource="{Binding People}"
-                     SelectedItem="{Binding SelectedPerson}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="5">
-                                <TextBlock FontSize="18" Text="{Binding Path=FullName}" />
-                                <TextBlock Text="{Binding Path=Post}" />
-                                <TextBlock Text="{Binding Path=Email}" />
-                                <TextBlock Text="{Binding Path=Phone}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <local:PersonEditor Grid.Column="1" DataContext="{Binding SelectedPerson}"/>
-            </Grid>
+            <local:PeopleViewer DataContext="{Binding PeopleVM}"/>
         </TabItem>
         <TabItem x:Name="incomingTab">
             <TabItem.Header>
                 Входящие
             </TabItem.Header>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="0.8*" />
-                </Grid.ColumnDefinitions>
-
-                <ListBox Grid.Column="0" ItemsSource="{Binding Requests}"
-                     SelectedItem="{Binding SelectedRequest}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="5">
-                                <TextBlock Text="{Binding Path=CallerId}" />
-                                <TextBlock Text="{Binding Path=TargetId}" />
-                                <TextBlock Text="{Binding Path=RequestTime}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <StackPanel Grid.Column="1" DataContext="{Binding SelectedRequest}">
-                    <TextBlock Text="Caller" />
-                    <TextBox Text="{Binding Path=CallerId, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Target" />
-                    <TextBox Text="{Binding Path=TargetId, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Requested" />
-                    <TextBox Text="{Binding Path=RequestTime, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-            </Grid>
+            <local:RequestsViewer DataContext="{Binding IncomingRequestsVM}"/>
+        </TabItem>
+        <TabItem x:Name="outgoingTab">
+            <TabItem.Header>
+                Исходящие
+            </TabItem.Header>
+            <local:RequestsViewer DataContext="{Binding OutgoingRequestsVM}"/>
         </TabItem>
     </TabControl>
 </Window>

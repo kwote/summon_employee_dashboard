@@ -19,10 +19,33 @@ namespace SummonEmployeeDashboard.ViewModels
         private PeopleViewModel peopleVM;
         public PeopleViewModel PeopleVM
         {
-            get { return peopleVM; } set
+            get { return peopleVM; }
+            set
             {
                 peopleVM = value;
                 OnPropertyChanged("PeopleVM");
+            }
+        }
+
+        private RequestsViewModel incomingRequestsVM;
+        public RequestsViewModel IncomingRequestsVM
+        {
+            get { return incomingRequestsVM; }
+            set
+            {
+                incomingRequestsVM = value;
+                OnPropertyChanged("IncomingRequestsVM");
+            }
+        }
+
+        private RequestsViewModel outgoingRequestsVM;
+        public RequestsViewModel OutgoingRequestsVM
+        {
+            get { return outgoingRequestsVM; }
+            set
+            {
+                outgoingRequestsVM = value;
+                OnPropertyChanged("OutgoingRequestsVM");
             }
         }
 
@@ -53,6 +76,8 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (isValid)
                 {
                     PeopleVM = new PeopleViewModel();
+                    IncomingRequestsVM = new RequestsViewModel(true);
+                    OutgoingRequestsVM = new RequestsViewModel(false);
                 }
                 else
                 {

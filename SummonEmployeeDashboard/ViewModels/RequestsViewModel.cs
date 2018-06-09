@@ -39,13 +39,25 @@ namespace SummonEmployeeDashboard.ViewModels
 
         public bool Incoming { get; set; }
 
-        public RequestsViewModel()
+        public RequestsViewModel(bool incoming)
         {
+            Incoming = incoming;
             Initialize();
         }
 
         private async void Initialize()
         {
+            AccessToken accessToken = App.GetApp().AccessToken;
+            if (Incoming)
+            {
+                Requests = new ObservableCollection<SummonRequest>(
+                    await App.GetApp().GetService<PeopleService>().ListIncomingRequests(accessToken.UserId, accessToken.Id));
+            }
+            else
+            {
+                Requests = new ObservableCollection<SummonRequest>(
+                    await App.GetApp().GetService<PeopleService>().ListOutgoingRequests(accessToken.UserId, accessToken.Id));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -71,7 +71,13 @@
     <Compile Include="Models\CustomJsonSerializer.cs" />
     <Compile Include="Models\LoginCredentials.cs" />
     <Compile Include="Models\AccessToken.cs" />
-    <Compile Include="PersonEditor.xaml.cs">
+    <Compile Include="Views\RequestsViewer.xaml.cs">
+      <DependentUpon>RequestsViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PeopleViewer.xaml.cs">
+      <DependentUpon>PeopleViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PersonEditor.xaml.cs">
       <DependentUpon>PersonEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Rest\IRestService.cs" />
@@ -106,7 +112,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PersonEditor.xaml">
+    <Page Include="Views\RequestsViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PeopleViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PersonEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -44,7 +44,6 @@ namespace SummonEmployeeDashboard.ViewModels
         private async void Initialize()
         {
             AccessToken accessToken = App.GetApp().AccessToken;
-            if (accessToken == null) return;
             People = new ObservableCollection<Person>(await App.GetApp().GetService<PeopleService>().ListPeople(null, accessToken.Id));
         }
 

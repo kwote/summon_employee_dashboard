@@ -27,7 +27,7 @@ namespace SummonEmployeeDashboard.Rest
 
         public async Task<Person> GetPerson(int personId, string accessToken)
         {
-            var request = new RestRequest("people");
+            var request = new RestRequest("people/{id}");
             request.AddUrlSegment("id", personId);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<Person>(request);
@@ -79,16 +79,16 @@ namespace SummonEmployeeDashboard.Rest
 
         public async Task<List<SummonRequest>> ListIncomingRequests(int targetId, string accessToken)
         {
-            var request = new RestRequest("people");
+            var request = new RestRequest("people/{id}/incomingRequests");
             request.AddUrlSegment("id", targetId);
             request.AddQueryParameter("filter[include]", "caller");
             request.AddHeader("Authorization", accessToken);
             return await RestCall<List<SummonRequest>>(request);
         }
 
-        public async Task<List<SummonRequest>> listOutgoingRequests(int callerId, string accessToken)
+        public async Task<List<SummonRequest>> ListOutgoingRequests(int callerId, string accessToken)
         {
-            var request = new RestRequest("people");
+            var request = new RestRequest("people/{id}/outgoingRequests");
             request.AddUrlSegment("id", callerId);
             request.AddQueryParameter("filter[include]", "target");
             request.AddHeader("Authorization", accessToken);
