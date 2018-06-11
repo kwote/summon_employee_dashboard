@@ -24,6 +24,6 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <local:PersonEditor DataContext="{Binding SelectedPerson}" Grid.Column="1"/>
+        <local:PersonViewer DataContext="{Binding SelectedPersonVM}" Grid.Column="1"/>
     </Grid>
 </UserControl>

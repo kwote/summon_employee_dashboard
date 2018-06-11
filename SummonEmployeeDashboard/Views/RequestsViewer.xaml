@@ -19,7 +19,7 @@
                         <TextBlock Text="{Binding Path=Caller.FullName}" />
                         <TextBlock Text="{Binding Path=Target.FullName}" />
                         <TextBlock Text="{Binding Path=State}" />
-                        <TextBlock Text="{Binding Path=RequestTime}"/>
+                        <TextBlock Text="{Binding Path=Requested}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -30,7 +30,7 @@
             <TextBlock Text="Target" />
             <TextBox Text="{Binding Path=TargetId, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="Requested" />
-            <TextBox Text="{Binding Path=RequestTime, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{Binding Path=Requested, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </Grid>
 </UserControl>

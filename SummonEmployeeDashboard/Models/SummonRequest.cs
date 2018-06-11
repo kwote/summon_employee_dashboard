@@ -16,7 +16,7 @@ namespace SummonEmployeeDashboard.Models
     }
     class SummonRequest : INotifyPropertyChanged
     {
-        private int? id;
+        private int id;
         private string requested;
         private string responded;
         private RequestState state;
@@ -24,7 +24,7 @@ namespace SummonEmployeeDashboard.Models
         private Person caller;
         private Person target;
 
-        public int? Id
+        public int Id
         {
             get => id; set
             {
