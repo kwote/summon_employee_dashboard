@@ -12,14 +12,6 @@ namespace SummonEmployeeDashboard
     class Person : INotifyPropertyChanged
     {
         private int _id;
-        public string FullName
-        {
-            get
-            {
-                return FirstName + " " + (Patronymic != string.Empty ? Patronymic + " " : "") + LastName;
-            }
-        }
-
         private string _firstName = "";
         private string _lastName = "";
         private string _patronymic = "";
@@ -27,6 +19,14 @@ namespace SummonEmployeeDashboard
         private string _email = "";
         private string _phone = "";
         private string _lastActiveTime = "";
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + (Patronymic != string.Empty ? Patronymic + " " : "") + LastName;
+            }
+        }
 
         [JsonProperty(PropertyName = "id")]
         public int Id

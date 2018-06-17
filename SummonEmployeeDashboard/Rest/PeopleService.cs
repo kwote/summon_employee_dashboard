@@ -14,15 +14,25 @@ namespace SummonEmployeeDashboard.Rest
         {
         }
 
-        public async Task<List<Person>> ListPeople(int? departmentId, string accessToken)
+        public async Task<List<Person>> ListPeople(string accessToken)
         {
             var request = new RestRequest("people");
-            if (departmentId != null)
-            {
-                request.AddQueryParameter("departmentId", departmentId.ToString());
-            }
             request.AddHeader("Authorization", accessToken);
             return await RestCall<List<Person>>(request);
+        }
+
+        public async Task<List<Person>> ListSummonPeople(string accessToken)
+        {
+            var request = new RestRequest("people/summon");
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<List<Person>>(request);
+        }
+
+        public async Task<List<string>> ListRoles()
+        {
+            var request = new RestRequest("Roles");
+            request.AddQueryParameter("filter[fields]", "name");
+            return await RestCall<List<string>>(request);
         }
 
         public async Task<Person> GetPerson(int personId, string accessToken)
@@ -62,6 +72,17 @@ namespace SummonEmployeeDashboard.Rest
             {
                 Method = Method.PUT
             };
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<Boolean>(request);
+        }
+
+        public async Task<Boolean> ChooseRole(string role, string accessToken)
+        {
+            var request = new RestRequest("people/chooseRole")
+            {
+                Method = Method.POST
+            };
+            request.AddQueryParameter("role", role);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<Boolean>(request);
         }

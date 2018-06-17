@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class PersonViewModel : INotifyPropertyChanged
+    class EditPersonViewModel : INotifyPropertyChanged
     {
         private Person person;
         public Person Person
@@ -24,58 +24,57 @@ namespace SummonEmployeeDashboard.ViewModels
             {
                 person = value;
                 OnPropertyChanged("Person");
-                OnPropertyChanged("PhotoVisibility");
             }
         }
 
-        public Visibility PhotoVisibility
+        private string role;
+        public string Role
         {
-            get { return person != null ? Visibility.Visible : Visibility.Hidden; }
+            get { return role; }
+            set
+            {
+                role = value;
+                OnPropertyChanged("Role");
+            }
         }
 
-        private ICommand summonCommand;
+        private ICommand chooseRoleCommand;
 
-        public ICommand SummonCommand
+        public ICommand ChooseRoleCommand
         {
             get
             {
-                if (summonCommand == null)
+                if (chooseRoleCommand == null)
                 {
-                    summonCommand = new RelayCommand(
-                        async param => await SummonAsync(),
-                        param => CanSummon()
+                    chooseRoleCommand = new RelayCommand(
+                        async param => await ChooseRoleAsync(),
+                        param => CanChooseRole()
                     );
                 }
-                return summonCommand;
+                return chooseRoleCommand;
             }
         }
 
-        public PersonViewModel()
-        {
-            Initialize();
-        }
-
-        private bool CanSummon()
-        {
-            var accessToken = App.GetApp().AccessToken;
-            return accessToken?.UserId != person?.Id;
-        }
-
-        private async Task SummonAsync()
+        private async Task ChooseRoleAsync()
         {
             try
             {
                 var accessToken = App.GetApp().AccessToken;
-                var add = new AddSummonRequest()
-                {
-                    CallerId = accessToken.UserId,
-                    TargetId = person.Id
-                };
-                await App.GetApp().GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
+                await App.GetApp().GetService<PeopleService>().ChooseRole(role, accessToken.Id);
             }
             catch (Exception)
             {
             }
+        }
+
+        private bool CanChooseRole()
+        {
+            return true;
+        }
+
+        public EditPersonViewModel()
+        {
+            Initialize();
         }
 
         private void Initialize()

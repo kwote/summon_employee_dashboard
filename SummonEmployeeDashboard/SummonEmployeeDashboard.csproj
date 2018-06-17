@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Department.cs" />
     <Compile Include="Models\RegisterPerson.cs" />
     <Compile Include="Models\AddSummonRequest.cs" />
     <Compile Include="Models\SummonRequest.cs" />
@@ -72,8 +73,14 @@
     <Compile Include="Models\CustomJsonSerializer.cs" />
     <Compile Include="Models\LoginCredentials.cs" />
     <Compile Include="Models\AccessToken.cs" />
+    <Compile Include="Rest\DepartmentService.cs" />
     <Compile Include="Rest\SummonRequestService.cs" />
+    <Compile Include="ViewModels\EditPersonViewModel.cs" />
+    <Compile Include="ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="ViewModels\PersonViewModel.cs" />
+    <Compile Include="Views\PeopleEditor.xaml.cs">
+      <DependentUpon>PeopleEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PersonViewer.xaml.cs">
       <DependentUpon>PersonViewer.xaml</DependentUpon>
     </Compile>
@@ -118,6 +125,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PeopleEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\PersonViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

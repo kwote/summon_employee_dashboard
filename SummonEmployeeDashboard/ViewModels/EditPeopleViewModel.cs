@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class PeopleViewModel : INotifyPropertyChanged
+    class EditPeopleViewModel : INotifyPropertyChanged
     {
-        public PersonViewModel SelectedPersonVM
+        public EditPersonViewModel SelectedPersonVM
         {
             get; set;
         }
@@ -40,7 +40,7 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        public PeopleViewModel()
+        public EditPeopleViewModel()
         {
             Initialize();
         }
@@ -48,9 +48,9 @@ namespace SummonEmployeeDashboard.ViewModels
         private async void Initialize()
         {
             AccessToken accessToken = App.GetApp().AccessToken;
-            SelectedPersonVM = new PersonViewModel();
+            SelectedPersonVM = new EditPersonViewModel();
             People = new ObservableCollection<Person>(await App.GetApp().GetService<PeopleService>()
-                .ListSummonPeople(accessToken.Id));
+                .ListPeople(accessToken.Id));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

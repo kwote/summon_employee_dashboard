@@ -27,6 +27,17 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        private EditPeopleViewModel editPeopleVM;
+        public EditPeopleViewModel EditPeopleVM
+        {
+            get { return editPeopleVM; }
+            set
+            {
+                editPeopleVM = value;
+                OnPropertyChanged("EditPeopleVM");
+            }
+        }
+
         private RequestsViewModel incomingRequestsVM;
         public RequestsViewModel IncomingRequestsVM
         {
@@ -58,37 +69,30 @@ namespace SummonEmployeeDashboard.ViewModels
         private async void Initialize()
         {
             var accessToken = App.GetApp().AccessToken;
-            if (accessToken == null)
+            if (accessToken != null)
             {
-                Login();
-            }
-            else
-            {
-                await PingAsync(accessToken.Id);
-            }
-        }
-
-        private async Task PingAsync(string accessToken)
-        {
-            try
-            {
-                var isValid = await App.GetApp().GetService<PeopleService>().Ping(accessToken);
+                var isValid = await PingAsync(accessToken.Id);
                 if (isValid)
                 {
                     PeopleVM = new PeopleViewModel();
                     IncomingRequestsVM = new RequestsViewModel(true);
                     OutgoingRequestsVM = new RequestsViewModel(false);
+                    EditPeopleVM = new EditPeopleViewModel();
+                    return;
                 }
-                else
-                {
-                    var loginWindow = new LoginWindow();
-                    loginWindow.Show();
-                    CloseAction();
-                }
+            }
+            Login();
+        }
+
+        private async Task<Boolean> PingAsync(string accessToken)
+        {
+            try
+            {
+               return await App.GetApp().GetService<PeopleService>().Ping(accessToken);
             } catch (Exception)
             {
-                Login();
             }
+            return false;
         }
 
         private void Login()

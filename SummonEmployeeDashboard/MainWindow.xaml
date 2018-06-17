@@ -25,5 +25,16 @@
             </TabItem.Header>
             <local:RequestsViewer DataContext="{Binding OutgoingRequestsVM}"/>
         </TabItem>
+        <TabItem x:Name="departments">
+            <TabItem.Header>
+                Отделы
+            </TabItem.Header>
+        </TabItem>
+        <TabItem x:Name="peopleEditTab">
+            <TabItem.Header>
+                Сотрудники (правка)
+            </TabItem.Header>
+            <local:PeopleEditor DataContext="{Binding EditPeopleVM}"/>
+        </TabItem>
     </TabControl>
 </Window>
