@@ -27,14 +27,25 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private string role;
-        public string Role
+        private Role role;
+        public Role Role
         {
             get { return role; }
             set
             {
                 role = value;
                 OnPropertyChanged("Role");
+            }
+        }
+
+        private ObservableCollection<Role> roles;
+        public ObservableCollection<Role> Roles
+        {
+            get { return roles; }
+            set
+            {
+                roles = value;
+                OnPropertyChanged("Roles");
             }
         }
 
@@ -60,7 +71,7 @@ namespace SummonEmployeeDashboard.ViewModels
             try
             {
                 var accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<PeopleService>().ChooseRole(role, accessToken.Id);
+                await App.GetApp().GetService<PeopleService>().ChooseRole(role.Name, accessToken.Id);
             }
             catch (Exception)
             {
@@ -69,7 +80,7 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private bool CanChooseRole()
         {
-            return true;
+            return role != null;
         }
 
         public EditPersonViewModel()

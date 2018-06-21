@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\RegisterPerson.cs" />
     <Compile Include="Models\AddSummonRequest.cs" />

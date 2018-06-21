@@ -28,11 +28,12 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<List<Person>>(request);
         }
 
-        public async Task<List<string>> ListRoles()
+        public async Task<List<Role>> ListRoles()
         {
             var request = new RestRequest("Roles");
+            request.AddQueryParameter("filter[fields]", "id");
             request.AddQueryParameter("filter[fields]", "name");
-            return await RestCall<List<string>>(request);
+            return await RestCall<List<Role>>(request);
         }
 
         public async Task<Person> GetPerson(int personId, string accessToken)
