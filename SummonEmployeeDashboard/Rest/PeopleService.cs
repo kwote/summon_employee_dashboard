@@ -36,6 +36,14 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<List<Role>>(request);
         }
 
+        public async Task<Role> GetRole(int personId, string accessToken)
+        {
+            var request = new RestRequest("people/role");
+            request.AddQueryParameter("personId", personId.ToString());
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<Role>(request);
+        }
+
         public async Task<Person> GetPerson(int personId, string accessToken)
         {
             var request = new RestRequest("people/{id}");

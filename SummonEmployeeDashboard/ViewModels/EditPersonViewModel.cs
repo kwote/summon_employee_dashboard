@@ -23,11 +23,13 @@ namespace SummonEmployeeDashboard.ViewModels
             set
             {
                 person = value;
+                GetRoleAsync(person.Id).ContinueWith(r=> { Role = initialRole = r.Result; });
                 OnPropertyChanged("Person");
             }
         }
 
         private Role role;
+        private Role initialRole;
         public Role Role
         {
             get { return role; }
@@ -71,16 +73,29 @@ namespace SummonEmployeeDashboard.ViewModels
             try
             {
                 var accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<PeopleService>().ChooseRole(role.Name, accessToken.Id);
+                await App.GetApp().GetService<PeopleService>().ChooseRole(Role.Name, accessToken.Id);
             }
             catch (Exception)
             {
             }
         }
 
+        private async Task<Role> GetRoleAsync(int personId)
+        {
+            try
+            {
+                var accessToken = App.GetApp().AccessToken;
+                return await App.GetApp().GetService<PeopleService>().GetRole(personId, accessToken.Id);
+            }
+            catch (Exception)
+            {
+            }
+            return null;
+        }
+
         private bool CanChooseRole()
         {
-            return role != null;
+            return Role != initialRole;
         }
 
         public EditPersonViewModel()

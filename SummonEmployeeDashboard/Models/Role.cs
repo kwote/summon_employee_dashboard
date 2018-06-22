@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 namespace SummonEmployeeDashboard.Models
 {
     class Role : INotifyPropertyChanged
@@ -31,6 +26,23 @@ namespace SummonEmployeeDashboard.Models
                 name = value;
                 OnPropertyChanged("Name");
             }
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return id == (obj as Role).id;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
