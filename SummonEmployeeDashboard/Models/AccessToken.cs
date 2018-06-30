@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard.Models
 {
-    class AccessToken : INotifyPropertyChanged
+    public class AccessToken : INotifyPropertyChanged
     {
         private string _id;
         private int? _ttl;

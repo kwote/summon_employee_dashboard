@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class PersonViewModel : INotifyPropertyChanged
+    class SummonRequestVM : INotifyPropertyChanged
     {
         private Person person;
         public Person Person
@@ -42,7 +42,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (summonCommand == null)
                 {
                     summonCommand = new RelayCommand(
-                        async param => await SummonAsync(),
+                        param => Summon(),
                         param => CanSummon()
                     );
                 }
@@ -50,7 +50,7 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        public PersonViewModel()
+        public SummonRequestVM()
         {
             Initialize();
         }
@@ -61,7 +61,7 @@ namespace SummonEmployeeDashboard.ViewModels
             return accessToken?.UserId != person?.Id;
         }
 
-        private async Task SummonAsync()
+        private async void Summon()
         {
             try
             {

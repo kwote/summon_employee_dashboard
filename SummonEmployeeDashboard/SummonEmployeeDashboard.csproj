@@ -34,16 +34,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EvtSource, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\3v.EvtSource.1.0.4\lib\netstandard2.0\EvtSource.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=106.2.2.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>packages\RestSharp.106.2.2\lib\net452\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reactive.4.0.0\lib\net46\System.Reactive.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,10 +70,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EventBus.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\RegisterPerson.cs" />
     <Compile Include="Models\AddSummonRequest.cs" />
+    <Compile Include="Models\SummonRequestUpdate.cs" />
+    <Compile Include="Models\SummonRequestMessage.cs" />
     <Compile Include="Models\SummonRequest.cs" />
     <Compile Include="RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
@@ -76,9 +86,13 @@
     <Compile Include="Models\AccessToken.cs" />
     <Compile Include="Rest\DepartmentService.cs" />
     <Compile Include="Rest\SummonRequestService.cs" />
-    <Compile Include="ViewModels\EditPersonViewModel.cs" />
+    <Compile Include="SummonRequestWindow.xaml.cs">
+      <DependentUpon>SummonRequestWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\EditPersonVM.cs" />
     <Compile Include="ViewModels\EditPeopleViewModel.cs" />
-    <Compile Include="ViewModels\PersonViewModel.cs" />
+    <Compile Include="ViewModels\SummonRequestVM.cs" />
+    <Compile Include="ViewModels\PersonVM.cs" />
     <Compile Include="Views\PeopleEditor.xaml.cs">
       <DependentUpon>PeopleEditor.xaml</DependentUpon>
     </Compile>
@@ -126,6 +140,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SummonRequestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PeopleEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

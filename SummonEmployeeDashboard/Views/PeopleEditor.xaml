@@ -16,14 +16,14 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=FullName}" />
-                        <TextBlock Text="{Binding Path=Post}" />
-                        <TextBlock Text="{Binding Path=Email}" />
-                        <TextBlock Text="{Binding Path=Phone}"/>
+                        <TextBlock FontSize="18" Text="{Binding Path=Person.FullName}" />
+                        <TextBlock Text="{Binding Path=Person.Post}" />
+                        <TextBlock Text="{Binding Path=Person.Email}" />
+                        <TextBlock Text="{Binding Path=Person.Phone}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <local:PersonEditor DataContext="{Binding SelectedPersonVM}" Grid.Column="1"/>
+        <local:PersonEditor DataContext="{Binding SelectedPerson}" Grid.Column="1"/>
     </Grid>
 </UserControl>

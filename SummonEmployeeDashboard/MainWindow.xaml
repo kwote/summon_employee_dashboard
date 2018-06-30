@@ -25,7 +25,7 @@
             </TabItem.Header>
             <local:RequestsViewer DataContext="{Binding OutgoingRequestsVM}"/>
         </TabItem>
-        <TabItem x:Name="departments">
+        <TabItem x:Name="departments" Visibility="Collapsed">
             <TabItem.Header>
                 Отделы
             </TabItem.Header>

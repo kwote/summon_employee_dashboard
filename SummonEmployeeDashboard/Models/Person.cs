@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard
 {
-    class Person : INotifyPropertyChanged
+    public class Person : INotifyPropertyChanged
     {
         private int _id;
         private string _firstName = "";

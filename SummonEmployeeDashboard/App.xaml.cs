@@ -17,7 +17,9 @@ namespace SummonEmployeeDashboard
     /// </summary>
     public partial class App : Application
     {
-        private IRestClient client = new RestClient("http://localhost:3000/api/");
+        public static string URL = "http://localhost:3000/api/";
+        private IRestClient client = new RestClient(URL);
+        public EventBus EventBus { get; } = new EventBus();
 
         private AccessToken accessToken = null;
         internal AccessToken AccessToken {

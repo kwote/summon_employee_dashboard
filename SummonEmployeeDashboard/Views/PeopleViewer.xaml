@@ -10,20 +10,25 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="0.8*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.1*" />
+        </Grid.RowDefinitions>
 
         <ListBox Grid.Column="0" ItemsSource="{Binding People}"
                      SelectedItem="{Binding SelectedPerson}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=FullName}" />
-                        <TextBlock Text="{Binding Path=Post}" />
-                        <TextBlock Text="{Binding Path=Email}" />
-                        <TextBlock Text="{Binding Path=Phone}"/>
+                        <TextBlock FontSize="18" Text="{Binding Path=Person.FullName}" />
+                        <TextBlock Text="{Binding Path=Person.Post}" />
+                        <TextBlock Text="{Binding Path=Person.Email}" />
+                        <TextBlock Text="{Binding Path=Person.Phone}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <local:PersonViewer DataContext="{Binding SelectedPersonVM}" Grid.Column="1"/>
+        <Button Grid.Row="1" Command="{Binding Path=ReloadCommand}">Reload</Button>
+        <local:PersonViewer DataContext="{Binding SelectedPerson}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
     </Grid>
 </UserControl>

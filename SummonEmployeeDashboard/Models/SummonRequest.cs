@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard.Models
 {
-    enum RequestState
+    public enum RequestState
     {
         Pending = 0,
         Accepted = 1,
         Rejected = 2
     }
-    class SummonRequest : INotifyPropertyChanged
+    public class SummonRequest : INotifyPropertyChanged
     {
         private int id;
         private string requested;
@@ -24,6 +25,7 @@ namespace SummonEmployeeDashboard.Models
         private Person caller;
         private Person target;
 
+        [JsonProperty(PropertyName = "id")]
         public int Id
         {
             get => id; set
@@ -32,14 +34,20 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("Id");
             }
         }
+        [JsonProperty(PropertyName = "callerId")]
         public int CallerId { get; set; }
+
+        [JsonProperty(PropertyName = "caller")]
         public Person Caller { get => caller; set
             {
                 caller = value;
                 OnPropertyChanged("Caller");
             }
         }
+        [JsonProperty(PropertyName = "targetId")]
         public int TargetId { get; set; }
+
+        [JsonProperty(PropertyName = "target")]
         public Person Target
         {
             get => target; set
@@ -48,6 +56,7 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("Target");
             }
         }
+        [JsonProperty(PropertyName = "requested")]
         public string Requested
         {
             get => requested; set
@@ -56,6 +65,7 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("Requested");
             }
         }
+        [JsonProperty(PropertyName = "responded")]
         public string Responded
         {
             get => responded; set
@@ -64,6 +74,7 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("Responded");
             }
         }
+        [JsonProperty(PropertyName = "state")]
         public RequestState State
         {
             get => state; set
@@ -72,6 +83,7 @@ namespace SummonEmployeeDashboard.Models
                 OnPropertyChanged("State");
             }
         }
+        [JsonProperty(PropertyName = "enabled")]
         public bool Enabled
         {
             get => enabled; set

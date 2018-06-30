@@ -22,32 +22,35 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<Person>(request);
         }
 
-        public async Task<SummonRequest> Accept(string accessToken)
+        public async Task<SummonRequest> Accept(int requestId, string accessToken)
         {
             var request = new RestRequest("summonrequests/{id}/accept")
             {
                 Method = Method.PUT
             };
+            request.AddUrlSegment("id", requestId);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<SummonRequest>(request);
         }
 
-        public async Task<SummonRequest> Reject(string accessToken)
+        public async Task<SummonRequest> Reject(int requestId, string accessToken)
         {
             var request = new RestRequest("summonrequests/{id}/reject")
             {
                 Method = Method.PUT
             };
+            request.AddUrlSegment("id", requestId);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<SummonRequest>(request);
         }
 
-        public async Task<SummonRequest> Cancel(string accessToken)
+        public async Task<SummonRequest> Cancel(int requestId, string accessToken)
         {
             var request = new RestRequest("summonrequests/{id}/cancel")
             {
                 Method = Method.PUT
             };
+            request.AddUrlSegment("id", requestId);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<SummonRequest>(request);
         }

@@ -14,23 +14,21 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class EditPeopleViewModel : INotifyPropertyChanged
     {
-        public EditPersonViewModel SelectedPersonVM
-        {
-            get; set;
-        }
+        private EditPersonVM selectedPersonVM;
 
-        public Person SelectedPerson
+        public EditPersonVM SelectedPerson
         {
-            get { return SelectedPersonVM.Person; }
+            get { return selectedPersonVM; }
             set
             {
-                SelectedPersonVM.Person = value;
+                selectedPersonVM = value;
+                selectedPersonVM.GetRoleAsync();
                 OnPropertyChanged("SelectedPerson");
             }
         }
 
-        private ObservableCollection<Person> people;
-        public ObservableCollection<Person> People {
+        private ObservableCollection<EditPersonVM> people;
+        public ObservableCollection<EditPersonVM> People {
             get {
                 return people;
             }
@@ -49,12 +47,14 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             App app = App.GetApp();
             var accessToken = app.AccessToken;
-            SelectedPersonVM = new EditPersonViewModel();
-            await Task.WhenAll(
-                app.GetService<PeopleService>().ListPeople(accessToken.Id)
-                    .ContinueWith((p)=> { People = new ObservableCollection<Person>(p.Result); }),
-                app.GetService<PeopleService>().ListRoles()
-                    .ContinueWith((p) => { SelectedPersonVM.Roles = new ObservableCollection<Role>(p.Result); })
+            SelectedPerson = new EditPersonVM();
+            var roles = await app.GetService<PeopleService>().ListRoles();
+            var people = await app.GetService<PeopleService>().ListPeople(accessToken.Id);
+            People = new ObservableCollection<EditPersonVM>(
+                people.ConvertAll(p1 => new EditPersonVM() {
+                    Person = p1,
+                    Roles = new ObservableCollection<Role>(roles)
+                })
             );
         }
 

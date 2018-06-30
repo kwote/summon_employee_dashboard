@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
@@ -37,6 +38,86 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        private ICommand reloadCommand;
+
+        public ICommand ReloadCommand
+        {
+            get
+            {
+                if (reloadCommand == null)
+                {
+                    reloadCommand = new RelayCommand(
+                        param => Reload(),
+                        param => CanReload()
+                    );
+                }
+                return reloadCommand;
+            }
+        }
+
+        private bool CanReload()
+        {
+            return true;
+        }
+
+        private ICommand acceptCommand;
+
+        public ICommand AcceptCommand
+        {
+            get
+            {
+                if (acceptCommand == null)
+                {
+                    acceptCommand = new RelayCommand(
+                        param => Accept(),
+                        param => CanAccept()
+                    );
+                }
+                return acceptCommand;
+            }
+        }
+
+        private async void Accept()
+        {
+            AccessToken accessToken = App.GetApp().AccessToken;
+            await App.GetApp().GetService<SummonRequestService>()
+                .Accept(SelectedRequest.Id, accessToken.Id);
+        }
+
+        private bool CanAccept()
+        {
+            return true;
+        }
+
+        private ICommand rejectCommand;
+
+        public ICommand RejectCommand
+        {
+            get
+            {
+                if (rejectCommand == null)
+                {
+                    rejectCommand = new RelayCommand(
+                        param => Reject(),
+                        param => CanReject()
+                    );
+                }
+                return rejectCommand;
+            }
+        }
+
+        private async void Reject()
+        {
+            AccessToken accessToken = App.GetApp().AccessToken;
+            await App.GetApp().GetService<SummonRequestService>()
+                .Reject(SelectedRequest.Id, accessToken.Id);
+        }
+
+        private bool CanReject()
+        {
+            return true;
+        }
+
         public bool Incoming { get; set; }
 
         public RequestsViewModel(bool incoming)
@@ -45,7 +126,12 @@ namespace SummonEmployeeDashboard.ViewModels
             Initialize();
         }
 
-        private async void Initialize()
+        private void Initialize()
+        {
+            Reload();
+        }
+
+        private async void Reload()
         {
             AccessToken accessToken = App.GetApp().AccessToken;
             if (Incoming)

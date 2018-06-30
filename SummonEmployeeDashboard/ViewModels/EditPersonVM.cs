@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class EditPersonViewModel : INotifyPropertyChanged
+    class EditPersonVM : INotifyPropertyChanged
     {
         private Person person;
         public Person Person
@@ -23,7 +23,6 @@ namespace SummonEmployeeDashboard.ViewModels
             set
             {
                 person = value;
-                GetRoleAsync(person.Id).ContinueWith(r=> { Role = initialRole = r.Result; });
                 OnPropertyChanged("Person");
             }
         }
@@ -80,25 +79,25 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async Task<Role> GetRoleAsync(int personId)
+        public async void GetRoleAsync()
         {
             try
             {
                 var accessToken = App.GetApp().AccessToken;
-                return await App.GetApp().GetService<PeopleService>().GetRole(personId, accessToken.Id);
+                var r = await App.GetApp().GetService<PeopleService>().GetRole(person.Id, accessToken.Id);
+                Role = initialRole = r;
             }
             catch (Exception)
             {
             }
-            return null;
         }
 
         private bool CanChooseRole()
         {
-            return Role != initialRole;
+            return role != initialRole;
         }
 
-        public EditPersonViewModel()
+        public EditPersonVM()
         {
             Initialize();
         }

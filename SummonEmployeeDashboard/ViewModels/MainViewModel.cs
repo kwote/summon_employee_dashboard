@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EvtSource;
+using Newtonsoft.Json;
 using SummonEmployeeDashboard.Models;
 using SummonEmployeeDashboard.Rest;
 using System;
@@ -6,16 +7,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class MainViewModel : INotifyPropertyChanged
+    class MainViewModel : INotifyPropertyChanged, IObserver<SummonRequestUpdate>
     {
         public Action CloseAction { get; set; }
-
         private PeopleViewModel peopleVM;
         public PeopleViewModel PeopleVM
         {
@@ -60,9 +62,12 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        private readonly SynchronizationContext syncContext;
+
         public MainViewModel(Action closeAction)
         {
             CloseAction = closeAction;
+            syncContext = SynchronizationContext.Current;
             Initialize();
         }
 
@@ -74,14 +79,33 @@ namespace SummonEmployeeDashboard.ViewModels
                 var isValid = await PingAsync(accessToken.Id);
                 if (isValid)
                 {
-                    PeopleVM = new PeopleViewModel();
-                    IncomingRequestsVM = new RequestsViewModel(true);
-                    OutgoingRequestsVM = new RequestsViewModel(false);
-                    EditPeopleVM = new EditPeopleViewModel();
+                    ReloadPeople();
+                    ReloadEditPeople();
+                    ReloadRequests(true);
+                    ReloadRequests(false);
+                    App.GetApp().EventBus.Subscribe(this);
+                    App.GetApp().EventBus.Initialize(accessToken);
                     return;
                 }
             }
             Login();
+        }
+
+        private void ReloadPeople()
+        {
+            PeopleVM = new PeopleViewModel();
+        }
+
+        private void ReloadEditPeople()
+        {
+            EditPeopleVM = new EditPeopleViewModel();
+        }
+
+        private void ReloadRequests(bool incoming)
+        {
+            if (incoming) IncomingRequestsVM = new RequestsViewModel(true);
+            else
+                OutgoingRequestsVM = new RequestsViewModel(false);
         }
 
         private async Task<Boolean> PingAsync(string accessToken)
@@ -106,6 +130,30 @@ namespace SummonEmployeeDashboard.ViewModels
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public void OnNext(SummonRequestUpdate update)
+        {
+            switch (update.UpdateType)
+            {
+                case UpdateType.Create:
+                    syncContext.Post(o =>
+                    {
+                        var incomingRequestWindow = new SummonRequestWindow();
+                        incomingRequestWindow.Show();
+                    }, null);
+                    break;
+                case UpdateType.Cancel:
+                    break;
+            }
+        }
+
+        public void OnError(Exception error)
+        {
+        }
+
+        public void OnCompleted()
+        {
         }
     }
 }
