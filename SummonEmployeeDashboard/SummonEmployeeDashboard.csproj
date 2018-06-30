@@ -96,6 +96,9 @@
     <Compile Include="Views\PeopleEditor.xaml.cs">
       <DependentUpon>PeopleEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\RequestViewer.xaml.cs">
+      <DependentUpon>RequestViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PersonViewer.xaml.cs">
       <DependentUpon>PersonViewer.xaml</DependentUpon>
     </Compile>
@@ -145,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PeopleEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RequestViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

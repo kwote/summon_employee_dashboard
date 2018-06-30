@@ -71,11 +71,16 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async void Reload()
         {
-            AccessToken accessToken = App.GetApp().AccessToken;
-            SelectedPerson = new PersonVM();
-            var people = await App.GetApp().GetService<PeopleService>()
-                .ListSummonPeople(accessToken.Id);
-            People = new ObservableCollection<PersonVM>(people.ConvertAll(p => new PersonVM() { Person = p }));
+            try
+            {
+                AccessToken accessToken = App.GetApp().AccessToken;
+                SelectedPerson = new PersonVM();
+                var people = await App.GetApp().GetService<PeopleService>().ListSummonPeople(accessToken.Id);
+                People = new ObservableCollection<PersonVM>(people.ConvertAll(p => new PersonVM() { Person = p }));
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

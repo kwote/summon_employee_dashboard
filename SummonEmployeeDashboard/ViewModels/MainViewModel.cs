@@ -64,9 +64,8 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private readonly SynchronizationContext syncContext;
 
-        public MainViewModel(Action closeAction)
+        public MainViewModel()
         {
-            CloseAction = closeAction;
             syncContext = SynchronizationContext.Current;
             Initialize();
         }
@@ -139,7 +138,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 case UpdateType.Create:
                     syncContext.Post(o =>
                     {
-                        var incomingRequestWindow = new SummonRequestWindow();
+                        var incomingRequestWindow = new SummonRequestWindow(update.Request);
                         incomingRequestWindow.Show();
                     }, null);
                     break;

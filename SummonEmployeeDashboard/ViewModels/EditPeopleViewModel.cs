@@ -45,17 +45,22 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async void Initialize()
         {
-            App app = App.GetApp();
-            var accessToken = app.AccessToken;
-            SelectedPerson = new EditPersonVM();
-            var roles = await app.GetService<PeopleService>().ListRoles();
-            var people = await app.GetService<PeopleService>().ListPeople(accessToken.Id);
-            People = new ObservableCollection<EditPersonVM>(
-                people.ConvertAll(p1 => new EditPersonVM() {
-                    Person = p1,
-                    Roles = new ObservableCollection<Role>(roles)
-                })
-            );
+            try
+            {
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
+                SelectedPerson = new EditPersonVM();
+                var roles = await app.GetService<PeopleService>().ListRoles();
+                var people = await app.GetService<PeopleService>().ListPeople(accessToken.Id);
+                People = new ObservableCollection<EditPersonVM>(
+                    people.ConvertAll(p1 => new EditPersonVM() {
+                        Person = p1,
+                        Roles = new ObservableCollection<Role>(roles)
+                    })
+                );
+            } catch (Exception)
+            {
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

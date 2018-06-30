@@ -30,5 +30,21 @@ namespace SummonEmployeeDashboard.Models
         {
             get; set;
         }
+
+        public SummonRequest Request()
+        {
+            return new SummonRequest()
+            {
+                Id = Data.Id,
+                Requested = Data.Requested,
+                Responded = Data.Responded,
+                State = Data.State,
+                Enabled = Data.Enabled,
+                CallerId = Data.CallerId,
+                TargetId = Data.TargetId,
+                Caller = Caller,
+                Target = Callee
+            };
+        }
     }
 }

@@ -72,6 +72,7 @@ namespace SummonEmployeeDashboard.Rest
             var request = new RestRequest("people/{id}/incomingRequests");
             request.AddUrlSegment("id", targetId);
             request.AddQueryParameter("filter[include]", "caller");
+            request.AddQueryParameter("filter[order]", "requested DESC");
             request.AddHeader("Authorization", accessToken);
             return await RestCall<List<SummonRequest>>(request);
         }
@@ -81,6 +82,7 @@ namespace SummonEmployeeDashboard.Rest
             var request = new RestRequest("people/{id}/outgoingRequests");
             request.AddUrlSegment("id", callerId);
             request.AddQueryParameter("filter[include]", "target");
+            request.AddQueryParameter("filter[order]", "requested DESC");
             request.AddHeader("Authorization", accessToken);
             return await RestCall<List<SummonRequest>>(request);
         }

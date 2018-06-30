@@ -5,13 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SummonEmployeeDashboard"
         mc:Ignorable="d"
-        Title="SummonRequestWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="6*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Image Grid.Row="0" Source="/SummonEmployeeDashboard;component/Resources/person-icon.png"/>
-        <Button Grid.Row="1" Command="{Binding Path=SummonCommand}" Margin="15">Summon</Button>
-    </Grid>
+        Title="SummonRequestWindow" Width="450" Height="800">
+    <local:RequestViewer />
 </Window>

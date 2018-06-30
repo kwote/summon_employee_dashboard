@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SummonEmployeeDashboard.Models;
+using SummonEmployeeDashboard.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,12 @@ namespace SummonEmployeeDashboard
     /// </summary>
     public partial class SummonRequestWindow : Window
     {
-        public SummonRequestWindow()
+        private SummonRequestVM viewModel;
+        public SummonRequestWindow(SummonRequest request)
         {
             InitializeComponent();
+            viewModel = new SummonRequestVM(true) { Request = request, CloseAction = () => { Close(); } };
+            DataContext = viewModel;
         }
     }
 }

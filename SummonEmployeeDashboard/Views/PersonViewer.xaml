@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:SummonEmployeeDashboard"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="550">
-    <Grid Visibility="{Binding Path=PhotoVisibility}">
+    <Grid Visibility="{Binding Path=SelfVisibility}">
         <Grid.RowDefinitions>
             <RowDefinition Height="6*" />
             <RowDefinition Height="*" />
@@ -19,6 +19,6 @@
             <TextBlock Text="{Binding Path=Person.Email}" />
             <TextBlock Text="{Binding Path=Person.Phone}"/>
         </StackPanel>
-        <Button Grid.Row="2" Command="{Binding Path=SummonCommand}" Margin="5">Summon</Button>
+        <Button Grid.Row="2" Command="{Binding Path=SummonCommand}" Margin="5">Вызвать</Button>
     </Grid>
 </UserControl>

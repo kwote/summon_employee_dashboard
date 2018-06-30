@@ -16,66 +16,167 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class SummonRequestVM : INotifyPropertyChanged
     {
-        private Person person;
-        public Person Person
-        {
-            get { return person; }
-            set
-            {
-                person = value;
-                OnPropertyChanged("Person");
-                OnPropertyChanged("PhotoVisibility");
-            }
-        }
+        public PersonVM Person { get; private set; }
+        public Action CloseAction { get; set; }
 
-        public Visibility PhotoVisibility
-        {
-            get { return person != null ? Visibility.Visible : Visibility.Hidden; }
-        }
+        private SummonRequest request;
 
-        private ICommand summonCommand;
-
-        public ICommand SummonCommand
+        public SummonRequest Request
         {
             get
             {
-                if (summonCommand == null)
-                {
-                    summonCommand = new RelayCommand(
-                        param => Summon(),
-                        param => CanSummon()
-                    );
-                }
-                return summonCommand;
+                return request;
+            }
+            set
+            {
+                request = value;
+                Person = new PersonVM() { Person = incoming ? request.Caller : request.Target };
+                OnPropertyChanged("Request");
+                OnPropertyChanged("SelfVisibility");
             }
         }
 
-        public SummonRequestVM()
+        private bool IsPending()
         {
-            Initialize();
+            return request != null && request.Enabled && request.State == RequestState.Pending;
         }
 
-        private bool CanSummon()
+        public Visibility SelfVisibility
         {
-            var accessToken = App.GetApp().AccessToken;
-            return accessToken?.UserId != person?.Id;
+            get { return request != null ? Visibility.Visible : Visibility.Hidden; }
         }
 
-        private async void Summon()
+        public Visibility CancelVisible
+        {
+            get { return CanCancel() ? Visibility.Visible : Visibility.Hidden; }
+        }
+
+        public Visibility AcceptVisible
+        {
+            get { return CanAccept() ? Visibility.Visible : Visibility.Hidden; }
+        }
+
+        public Visibility RejectVisible
+        {
+            get { return CanReject() ? Visibility.Visible : Visibility.Hidden; }
+        }
+
+        private readonly bool incoming;
+        public bool Incoming { get; }
+
+        private ICommand acceptCommand;
+
+        public ICommand AcceptCommand
+        {
+            get
+            {
+                if (acceptCommand == null)
+                {
+                    acceptCommand = new RelayCommand(
+                        param => Accept(),
+                        param => CanAccept()
+                    );
+                }
+                return acceptCommand;
+            }
+        }
+
+        private async void Accept()
         {
             try
             {
-                var accessToken = App.GetApp().AccessToken;
-                var add = new AddSummonRequest()
+                AccessToken accessToken = App.GetApp().AccessToken;
+                await App.GetApp().GetService<SummonRequestService>()
+                    .Accept(Request.Id, accessToken.Id);
+                CloseAction?.Invoke();
+            } catch (Exception)
+            {
+
+            }
+        }
+
+        private bool CanAccept()
+        {
+            return IsPending() && incoming;
+        }
+
+        private ICommand rejectCommand;
+
+        public ICommand RejectCommand
+        {
+            get
+            {
+                if (rejectCommand == null)
                 {
-                    CallerId = accessToken.UserId,
-                    TargetId = person.Id
-                };
-                await App.GetApp().GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
+                    rejectCommand = new RelayCommand(
+                        param => Reject(),
+                        param => CanReject()
+                    );
+                }
+                return rejectCommand;
+            }
+        }
+
+        private async void Reject()
+        {
+            try
+            {
+                AccessToken accessToken = App.GetApp().AccessToken;
+                await App.GetApp().GetService<SummonRequestService>()
+                    .Reject(Request.Id, accessToken.Id);
+                CloseAction?.Invoke();
             }
             catch (Exception)
             {
+
             }
+        }
+
+        private bool CanReject()
+        {
+            return IsPending() && incoming;
+        }
+
+        private ICommand cancelCommand;
+
+        public ICommand CancelCommand
+        {
+            get
+            {
+                if (cancelCommand == null)
+                {
+                    cancelCommand = new RelayCommand(
+                        param => Cancel(),
+                        param => CanCancel()
+                    );
+                }
+                return cancelCommand;
+            }
+        }
+
+        private async void Cancel()
+        {
+            try
+            {
+                AccessToken accessToken = App.GetApp().AccessToken;
+                await App.GetApp().GetService<SummonRequestService>()
+                    .Cancel(Request.Id, accessToken.Id);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private bool CanCancel()
+        {
+            return request != null && request.Enabled && !incoming;
+        }
+
+        public SummonRequestVM(bool incoming)
+        {
+            this.incoming = incoming;
+            Initialize();
         }
 
         private void Initialize()

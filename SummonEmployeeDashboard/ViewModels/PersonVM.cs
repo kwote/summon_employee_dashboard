@@ -24,11 +24,11 @@ namespace SummonEmployeeDashboard.ViewModels
             {
                 person = value;
                 OnPropertyChanged("Person");
-                OnPropertyChanged("PhotoVisibility");
+                OnPropertyChanged("SelfVisibility");
             }
         }
 
-        public Visibility PhotoVisibility
+        public Visibility SelfVisibility
         {
             get { return person != null ? Visibility.Visible : Visibility.Hidden; }
         }

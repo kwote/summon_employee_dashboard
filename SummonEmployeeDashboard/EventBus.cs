@@ -37,8 +37,8 @@ namespace SummonEmployeeDashboard
                 var message = JsonConvert.DeserializeObject<SummonRequestMessage>(e.Message);
                 if (message != null)
                 {
-                    var request = message.Data;
-                    SummonRequestUpdate update = new SummonRequestUpdate { Request = request };
+                    var request = message.Request();
+                    var update = new SummonRequestUpdate { Request = request };
                     if (request.TargetId == accessToken.UserId)
                     {
                         switch (message.MessageType)

@@ -15,8 +15,8 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class RequestsViewModel : INotifyPropertyChanged
     {
-        private SummonRequest selectedRequest;
-        public SummonRequest SelectedRequest
+        private SummonRequestVM selectedRequest;
+        public SummonRequestVM SelectedRequest
         {
             get { return selectedRequest; }
             set
@@ -26,8 +26,8 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private ObservableCollection<SummonRequest> requests;
-        public ObservableCollection<SummonRequest> Requests
+        private ObservableCollection<SummonRequestVM> requests;
+        public ObservableCollection<SummonRequestVM> Requests
         {
             get {
                 return requests;
@@ -60,64 +60,6 @@ namespace SummonEmployeeDashboard.ViewModels
             return true;
         }
 
-        private ICommand acceptCommand;
-
-        public ICommand AcceptCommand
-        {
-            get
-            {
-                if (acceptCommand == null)
-                {
-                    acceptCommand = new RelayCommand(
-                        param => Accept(),
-                        param => CanAccept()
-                    );
-                }
-                return acceptCommand;
-            }
-        }
-
-        private async void Accept()
-        {
-            AccessToken accessToken = App.GetApp().AccessToken;
-            await App.GetApp().GetService<SummonRequestService>()
-                .Accept(SelectedRequest.Id, accessToken.Id);
-        }
-
-        private bool CanAccept()
-        {
-            return true;
-        }
-
-        private ICommand rejectCommand;
-
-        public ICommand RejectCommand
-        {
-            get
-            {
-                if (rejectCommand == null)
-                {
-                    rejectCommand = new RelayCommand(
-                        param => Reject(),
-                        param => CanReject()
-                    );
-                }
-                return rejectCommand;
-            }
-        }
-
-        private async void Reject()
-        {
-            AccessToken accessToken = App.GetApp().AccessToken;
-            await App.GetApp().GetService<SummonRequestService>()
-                .Reject(SelectedRequest.Id, accessToken.Id);
-        }
-
-        private bool CanReject()
-        {
-            return true;
-        }
-
         public bool Incoming { get; set; }
 
         public RequestsViewModel(bool incoming)
@@ -133,16 +75,18 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async void Reload()
         {
-            AccessToken accessToken = App.GetApp().AccessToken;
-            if (Incoming)
+            try
             {
-                Requests = new ObservableCollection<SummonRequest>(
-                    await App.GetApp().GetService<PeopleService>().ListIncomingRequests(accessToken.UserId, accessToken.Id));
+                AccessToken accessToken = App.GetApp().AccessToken;
+                SelectedRequest = new SummonRequestVM(Incoming);
+                var requests = Incoming
+                        ? await App.GetApp().GetService<PeopleService>().ListIncomingRequests(accessToken.UserId, accessToken.Id)
+                        : await App.GetApp().GetService<PeopleService>().ListOutgoingRequests(accessToken.UserId, accessToken.Id)
+                ;
+                Requests = new ObservableCollection<SummonRequestVM>(requests.ConvertAll(r => new SummonRequestVM(Incoming) { Request = r }));
             }
-            else
+            catch (Exception)
             {
-                Requests = new ObservableCollection<SummonRequest>(
-                    await App.GetApp().GetService<PeopleService>().ListOutgoingRequests(accessToken.UserId, accessToken.Id));
             }
         }
 
