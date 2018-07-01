@@ -21,7 +21,7 @@
                 <DataTemplate>
                     <StackPanel Margin="5">
                         <TextBlock Text="{Binding Path=Person.Person.FullName}" />
-                        <TextBlock Text="{Binding Path=Request.State}" />
+                        <TextBlock Text="{Binding Path=State}" />
                         <TextBlock Text="{Binding Path=Request.Requested}"/>
                         <TextBlock Text="{Binding Path=Request.Responded}"/>
                     </StackPanel>

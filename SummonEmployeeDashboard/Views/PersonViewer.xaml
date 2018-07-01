@@ -14,10 +14,14 @@
         </Grid.RowDefinitions>
         <Image Grid.Row="0" Source="/SummonEmployeeDashboard;component/Resources/person-icon.png"/>
         <StackPanel Grid.Row="1" Margin="5">
-            <TextBlock FontSize="18" Text="{Binding Path=Person.FullName}" />
-            <TextBlock Text="{Binding Path=Person.Post}" />
-            <TextBlock Text="{Binding Path=Person.Email}" />
-            <TextBlock Text="{Binding Path=Person.Phone}"/>
+            <TextBlock FontSize="18" Text="{Binding Path=Person.FullName}" 
+                   TextAlignment="Center" />
+            <TextBlock Text="{Binding Path=Person.Post}" 
+                   TextAlignment="Center" />
+            <TextBlock Text="{Binding Path=Person.Email}"
+                   TextAlignment="Center" />
+            <TextBlock Text="{Binding Path=Person.Phone}"
+                   TextAlignment="Center"/>
         </StackPanel>
         <Button Grid.Row="2" Command="{Binding Path=SummonCommand}" Margin="5">Вызвать</Button>
     </Grid>

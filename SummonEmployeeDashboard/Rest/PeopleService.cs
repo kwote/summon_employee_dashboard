@@ -111,7 +111,21 @@ namespace SummonEmployeeDashboard.Rest
         {
             var request = new RestRequest("people/{id}/incomingRequests");
             request.AddUrlSegment("id", targetId);
-            request.AddQueryParameter("filter[include]", "caller");
+            var date = DateTime.Now.AddDays(-1);
+            var filter = new Dictionary<string, object>()
+            {
+                ["where"] = new Dictionary<string, object>()
+                {
+                    ["requested"] = new Dictionary<string, object>()
+                    {
+                        ["gt"] = Utils.GetStringTime(date)
+                    }
+                },
+                ["include"] = "caller",
+                ["order"] = "requested DESC"
+            };
+            var filterStr = SimpleJson.SimpleJson.SerializeObject(filter);
+            request.AddQueryParameter("filter", filterStr);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<List<SummonRequest>>(request);
         }
@@ -120,7 +134,21 @@ namespace SummonEmployeeDashboard.Rest
         {
             var request = new RestRequest("people/{id}/outgoingRequests");
             request.AddUrlSegment("id", callerId);
-            request.AddQueryParameter("filter[include]", "target");
+            var date = DateTime.Now.AddDays(-1);
+            var filter = new Dictionary<string, object>()
+            {
+                ["where"] = new Dictionary<string, object>()
+                {
+                    ["requested"] = new Dictionary<string, object>()
+                    {
+                        ["gt"] = Utils.GetStringTime(date)
+                    }
+                },
+                ["include"] = "target",
+                ["order"] = "requested DESC"
+            };
+            var filterStr = SimpleJson.SimpleJson.SerializeObject(filter);
+            request.AddQueryParameter("filter", filterStr);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<List<SummonRequest>>(request);
         }

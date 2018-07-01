@@ -36,6 +36,25 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        public string State
+        {
+            get
+            {
+                if (!request.Enabled) return "Отменён";
+                switch (request.State)
+                {
+                    case RequestState.Pending:
+                        return "Ожидает";
+                    case RequestState.Accepted:
+                        return "Принят";
+                    case RequestState.Rejected:
+                        return "Отклонён";
+                    default:
+                        return "";
+                }
+            }
+        }
+
         private bool IsPending()
         {
             return request != null && request.Enabled && request.State == RequestState.Pending;

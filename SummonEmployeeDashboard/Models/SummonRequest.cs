@@ -18,8 +18,8 @@ namespace SummonEmployeeDashboard.Models
     public class SummonRequest : INotifyPropertyChanged
     {
         private int id;
-        private string requested;
-        private string responded;
+        private DateTime? requested;
+        private DateTime? responded;
         private RequestState state;
         private bool enabled;
         private Person caller;
@@ -57,7 +57,7 @@ namespace SummonEmployeeDashboard.Models
             }
         }
         [JsonProperty(PropertyName = "requested")]
-        public string Requested
+        public DateTime? Requested
         {
             get => requested; set
             {
@@ -66,7 +66,7 @@ namespace SummonEmployeeDashboard.Models
             }
         }
         [JsonProperty(PropertyName = "responded")]
-        public string Responded
+        public DateTime? Responded
         {
             get => responded; set
             {

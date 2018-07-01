@@ -89,6 +89,7 @@
     <Compile Include="SummonRequestWindow.xaml.cs">
       <DependentUpon>SummonRequestWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
     <Compile Include="ViewModels\EditPersonVM.cs" />
     <Compile Include="ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="ViewModels\SummonRequestVM.cs" />
