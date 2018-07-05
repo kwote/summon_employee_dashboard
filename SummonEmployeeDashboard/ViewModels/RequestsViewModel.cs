@@ -8,12 +8,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class RequestsViewModel : INotifyPropertyChanged
+    class RequestsViewModel : INotifyPropertyChanged, IObserver<SummonRequestUpdate>
     {
         private SummonRequestVM selectedRequest;
         public SummonRequestVM SelectedRequest
@@ -62,8 +63,11 @@ namespace SummonEmployeeDashboard.ViewModels
 
         public bool Incoming { get; set; }
 
+        private readonly SynchronizationContext syncContext;
+
         public RequestsViewModel(bool incoming)
         {
+            syncContext = SynchronizationContext.Current;
             Incoming = incoming;
             Initialize();
         }
@@ -71,6 +75,7 @@ namespace SummonEmployeeDashboard.ViewModels
         private void Initialize()
         {
             Reload();
+            App.GetApp().EventBus.Subscribe(this);
         }
 
         private async void Reload()
@@ -94,6 +99,30 @@ namespace SummonEmployeeDashboard.ViewModels
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public void OnNext(SummonRequestUpdate update)
+        {
+            switch (update.UpdateType)
+            {
+                case UpdateType.Accept:
+                    syncContext.Post(o =>
+                    {
+                    }, null);
+                    break;
+                case UpdateType.Reject:
+                    break;
+                case UpdateType.Cancel:
+                    break;
+            }
+        }
+
+        public void OnError(Exception error)
+        {
+        }
+
+        public void OnCompleted()
+        {
         }
     }
 }

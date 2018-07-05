@@ -22,7 +22,7 @@ namespace SummonEmployeeDashboard.ViewModels
             set
             {
                 selectedPersonVM = value;
-                selectedPersonVM.GetRoleAsync();
+                selectedPersonVM.GetRole();
                 OnPropertyChanged("SelectedPerson");
             }
         }

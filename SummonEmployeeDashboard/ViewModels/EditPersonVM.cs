@@ -59,7 +59,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (chooseRoleCommand == null)
                 {
                     chooseRoleCommand = new RelayCommand(
-                        async param => await ChooseRoleAsync(),
+                        async param => await ChooseRole(),
                         param => CanChooseRole()
                     );
                 }
@@ -67,7 +67,7 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async Task ChooseRoleAsync()
+        private async Task ChooseRole()
         {
             try
             {
@@ -79,7 +79,7 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        public async void GetRoleAsync()
+        public async void GetRole()
         {
             try
             {

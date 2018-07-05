@@ -8,10 +8,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
+using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
@@ -62,6 +64,21 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        private Role role = null;
+        public Role Role
+        {
+            get { return role; }
+            set
+            {
+                role = value;
+                OnPropertyChanged("AdminVisible");
+            }
+        }
+        public Visibility AdminVisible
+        {
+            get { return role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
         private readonly SynchronizationContext syncContext;
 
         public MainViewModel()
@@ -70,20 +87,47 @@ namespace SummonEmployeeDashboard.ViewModels
             Initialize();
         }
 
+        private CancellationTokenSource pingToken;
+        private AccessToken accessToken;
+
         private async void Initialize()
         {
-            var accessToken = App.GetApp().AccessToken;
+            App app = App.GetApp();
+            accessToken = app.AccessToken;
             if (accessToken != null)
             {
-                var isValid = await PingAsync(accessToken.Id);
+                var isValid = await Ping(accessToken.Id);
                 if (isValid)
                 {
                     ReloadPeople();
                     ReloadEditPeople();
                     ReloadRequests(true);
                     ReloadRequests(false);
-                    App.GetApp().EventBus.Subscribe(this);
-                    App.GetApp().EventBus.Initialize(accessToken);
+                    app.EventBus.Subscribe(this);
+                    app.EventBus.Initialize(accessToken);
+                    try
+                    {
+                        Role = await app.GetService<PeopleService>().GetRole(accessToken.User.Id, accessToken.Id);
+                    } catch (Exception)
+                    {
+                    }
+                    IObservable<long> observable = Observable.Interval(TimeSpan.FromSeconds(60));
+
+                    // Token for cancelation
+                    pingToken = new CancellationTokenSource();
+
+                    // Subscribe the obserable to the task on execution.
+                    observable.Subscribe(async x => {
+                        var valid = await Ping(accessToken.Id);
+                        if (!valid)
+                        {
+                            pingToken.Cancel();
+                            syncContext.Post(o =>
+                            {
+                                Login();
+                            }, null);
+                        }
+                    }, pingToken.Token);
                     return;
                 }
             }
@@ -102,12 +146,13 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void ReloadRequests(bool incoming)
         {
-            if (incoming) IncomingRequestsVM = new RequestsViewModel(true);
+            if (incoming)
+                IncomingRequestsVM = new RequestsViewModel(true);
             else
                 OutgoingRequestsVM = new RequestsViewModel(false);
         }
 
-        private async Task<Boolean> PingAsync(string accessToken)
+        private static async Task<Boolean> Ping(string accessToken)
         {
             try
             {

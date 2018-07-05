@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>person_icon_OGw_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EvtSource, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\3v.EvtSource.1.0.4\lib\netstandard2.0\EvtSource.dll</HintPath>
@@ -203,6 +206,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\person-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="person_icon_OGw_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

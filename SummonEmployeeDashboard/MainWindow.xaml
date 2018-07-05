@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SummonEmployeeDashboard"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Вызов сотрудника" Height="450" Width="800">
     <TabControl x:Name="main">
         <TabItem x:Name="peopleTab">
             <TabItem.Header>
@@ -30,7 +30,7 @@
                 Отделы
             </TabItem.Header>
         </TabItem>
-        <TabItem x:Name="peopleEditTab">
+        <TabItem x:Name="peopleEditTab" Visibility="{Binding AdminVisible}">
             <TabItem.Header>
                 Сотрудники (правка)
             </TabItem.Header>

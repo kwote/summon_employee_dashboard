@@ -59,7 +59,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (loginCommand == null)
                 {
                     loginCommand = new RelayCommand(
-                        async param => await LoginAsync(),
+                        async param => await Login(),
                         param => CanLogin()
                     );
                 }
@@ -97,7 +97,7 @@ namespace SummonEmployeeDashboard.ViewModels
             return true;
         }
 
-        private async Task LoginAsync()
+        private async Task Login()
         {
             try
             {
