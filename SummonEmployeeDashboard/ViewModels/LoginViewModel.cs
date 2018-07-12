@@ -25,7 +25,7 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private string error;
+        private string error = "";
         public string Error
         {
             get { return error; }
@@ -42,47 +42,26 @@ namespace SummonEmployeeDashboard.ViewModels
         public LoginViewModel(Action action)
         {
             CloseAction = action;
+            LoginCommand = new RelayCommand(
+                async param => await Login(),
+                param => CanLogin()
+            );
+            RegisterCommand = new RelayCommand(
+                param => Register(),
+                param => true
+            );
             Initialize();
         }
 
         private void Initialize()
         {
             credentials = new LoginCredentials();
+            ServerIP = App.GetApp().ServerIP;
         }
 
-        private ICommand loginCommand;
+        public ICommand LoginCommand { get; }
 
-        public ICommand LoginCommand
-        {
-            get
-            {
-                if (loginCommand == null)
-                {
-                    loginCommand = new RelayCommand(
-                        async param => await Login(),
-                        param => CanLogin()
-                    );
-                }
-                return loginCommand;
-            }
-        }
-
-        private ICommand registerCommand;
-
-        public ICommand RegisterCommand
-        {
-            get
-            {
-                if (registerCommand == null)
-                {
-                    registerCommand = new RelayCommand(
-                        param => Register(),
-                        param => true
-                    );
-                }
-                return registerCommand;
-            }
-        }
+        public ICommand RegisterCommand { get; }
 
         private bool CanLogin()
         {
@@ -101,7 +80,9 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                var accessToken = await App.GetApp().GetService<PeopleService>().Login(credentials);
+                App app = App.GetApp();
+                app.ServerIP = ServerIP;
+                var accessToken = await app.GetService<PeopleService>().Login(credentials);
                 if (accessToken != null)
                 {
                     App.GetApp().AccessToken = accessToken;
@@ -120,6 +101,20 @@ namespace SummonEmployeeDashboard.ViewModels
             var registerWindow = new RegisterWindow();
             registerWindow.Show();
             CloseAction();
+        }
+
+        private string serverIP = "";
+        public string ServerIP
+        {
+            get
+            {
+                return serverIP;
+            }
+            set
+            {
+                serverIP = value;
+                OnPropertyChanged("ServerIP");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

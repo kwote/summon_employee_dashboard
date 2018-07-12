@@ -72,7 +72,11 @@ namespace SummonEmployeeDashboard.ViewModels
             try
             {
                 var accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<PeopleService>().ChooseRole(Role.Name, accessToken.Id);
+                var success = await App.GetApp().GetService<PeopleService>().ChooseRole(person.Id, Role.Name, accessToken.Id);
+                if (success)
+                {
+                    initialRole = Role;
+                }
             }
             catch (Exception)
             {

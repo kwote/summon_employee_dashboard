@@ -85,12 +85,13 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<Boolean>(request);
         }
 
-        public async Task<Boolean> ChooseRole(string role, string accessToken)
+        public async Task<Boolean> ChooseRole(int personId, string role, string accessToken)
         {
             var request = new RestRequest("people/chooseRole")
             {
                 Method = Method.POST
             };
+            request.AddQueryParameter("userId", personId.ToString());
             request.AddQueryParameter("role", role);
             request.AddHeader("Authorization", accessToken);
             return await RestCall<Boolean>(request);

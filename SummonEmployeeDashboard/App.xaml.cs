@@ -17,8 +17,34 @@ namespace SummonEmployeeDashboard
     /// </summary>
     public partial class App : Application
     {
-        public static string URL = "http://localhost:3000/api/";
-        private IRestClient client = new RestClient(URL);
+        private string serverIP = null;
+        public string ServerIP
+        {
+            get
+            {
+                if (serverIP == null)
+                {
+                    serverIP = ReadServerIP();
+                }
+                return serverIP;
+            }
+            set
+            {
+                serverIP = value;
+                SaveServerIP(serverIP);
+            }
+        }
+
+        public string URL
+        {
+            get
+            {
+                const string localhost = "localhost";
+
+                return "http://" + (string.IsNullOrWhiteSpace(ServerIP) ? localhost : ServerIP) + ":3000/api/";
+            }
+        }
+        private IRestClient client = null;
         public EventBus EventBus { get; } = new EventBus();
 
         private AccessToken accessToken = null;
@@ -55,7 +81,26 @@ namespace SummonEmployeeDashboard
             SummonEmployeeDashboard.Properties.Settings.Default.Save();
         }
 
-        public T GetService<T>() where T : IRestService, new() => new T { Client = client };
+        private string ReadServerIP()
+        {
+            var serverIP = SummonEmployeeDashboard.Properties.Settings.Default.ServerIP;
+            return serverIP;
+        }
+
+        private void SaveServerIP(string serverIP)
+        {
+            SummonEmployeeDashboard.Properties.Settings.Default.ServerIP = serverIP;
+            SummonEmployeeDashboard.Properties.Settings.Default.Save();
+        }
+
+        public T GetService<T>() where T : IRestService, new()
+        {
+            if (client == null)
+            {
+                client = new RestClient(URL);
+            }
+            return new T { Client = client };
+        }
 
         public static App GetApp()
         {

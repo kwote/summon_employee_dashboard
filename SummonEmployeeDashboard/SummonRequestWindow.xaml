@@ -6,5 +6,5 @@
         xmlns:local="clr-namespace:SummonEmployeeDashboard"
         mc:Ignorable="d"
         Title="Входящий вызов" Width="450" Height="650">
-    <local:RequestViewer />
+    <local:RequestViewer Margin="20"/>
 </Window>

@@ -29,7 +29,7 @@ namespace SummonEmployeeDashboard
             if (evt != null) return;
             var condition = string.Format(Format, accessToken.UserId, accessToken.UserId);
             Uri url = new Uri(
-                App.URL + "summonrequests/change-stream?access_token=" + accessToken.Id + "&options=" + condition
+                App.GetApp().URL + "summonrequests/change-stream?access_token=" + accessToken.Id + "&options=" + condition
             );
             evt = new EventSourceReader(url);
             evt.MessageReceived += (object sender, EventSourceMessageEventArgs e) => {
@@ -77,7 +77,7 @@ namespace SummonEmployeeDashboard
                 await Task.Delay(e.ReconnectDelay);
                 evt.Start(); // Reconnect to the same URL
             };
-            await Task.Run(()=> { evt = evt.Start(); });
+            await Task.Run(() => { evt = evt.Start(); });
         }
 
         public void Dispose()

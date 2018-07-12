@@ -30,7 +30,7 @@ namespace SummonEmployeeDashboard
         {
             InitializeComponent();
 
-            viewModel = new MainViewModel() { CloseAction = () => { Close(); } };
+            viewModel = new MainViewModel(() => { Close(); });
             DataContext = viewModel;
         }
     }

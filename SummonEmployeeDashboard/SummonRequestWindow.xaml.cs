@@ -3,6 +3,7 @@ using SummonEmployeeDashboard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace SummonEmployeeDashboard
             syncContext = SynchronizationContext.Current;
             viewModel = new SummonRequestVM(true) { Request = request, CloseAction = () => { Close(); } };
             DataContext = viewModel;
+            SystemSounds.Asterisk.Play();
             App.GetApp().EventBus.Subscribe(this);
         }
 

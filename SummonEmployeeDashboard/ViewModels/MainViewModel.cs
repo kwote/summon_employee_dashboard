@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
@@ -76,7 +77,7 @@ namespace SummonEmployeeDashboard.ViewModels
         }
         public Visibility AdminVisible
         {
-            get { return role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
+            get { return Visibility.Visible; }// role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         private readonly SynchronizationContext syncContext;
@@ -87,8 +88,16 @@ namespace SummonEmployeeDashboard.ViewModels
             Initialize();
         }
 
+        public MainViewModel(Action close)
+        {
+            CloseAction = close;
+            syncContext = SynchronizationContext.Current;
+            Initialize();
+        }
+
         private CancellationTokenSource pingToken;
         private AccessToken accessToken;
+        private IDisposable updateSubscription;
 
         private async void Initialize()
         {
@@ -103,7 +112,7 @@ namespace SummonEmployeeDashboard.ViewModels
                     ReloadEditPeople();
                     ReloadRequests(true);
                     ReloadRequests(false);
-                    app.EventBus.Subscribe(this);
+                    updateSubscription = app.EventBus.Subscribe(this);
                     app.EventBus.Initialize(accessToken);
                     try
                     {
@@ -132,6 +141,41 @@ namespace SummonEmployeeDashboard.ViewModels
                 }
             }
             Login();
+        }
+
+        private ICommand logoutCommand;
+
+        public ICommand LogoutCommand
+        {
+            get
+            {
+                if (logoutCommand == null)
+                {
+                    logoutCommand = new RelayCommand(
+                        async param => await Logout(),
+                        param => CanLogout()
+                    );
+                }
+                return logoutCommand;
+            }
+        }
+
+        private async Task Logout()
+        {
+            try
+            {
+                App app = App.GetApp();
+                var accessToken = await app.GetService<PeopleService>().Logout(app.AccessToken.Id);
+                Login();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private bool CanLogout()
+        {
+            return true;
         }
 
         private void ReloadPeople()
@@ -165,15 +209,10 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void Login()
         {
+            updateSubscription?.Dispose();
             var loginWindow = new LoginWindow();
             loginWindow.Show();
             CloseAction();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         public void OnNext(SummonRequestUpdate update)
@@ -198,6 +237,12 @@ namespace SummonEmployeeDashboard.ViewModels
 
         public void OnCompleted()
         {
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }
