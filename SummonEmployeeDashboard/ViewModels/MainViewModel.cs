@@ -77,7 +77,7 @@ namespace SummonEmployeeDashboard.ViewModels
         }
         public Visibility AdminVisible
         {
-            get { return Visibility.Visible; }// role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
+            get { return role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         private readonly SynchronizationContext syncContext;
@@ -94,8 +94,6 @@ namespace SummonEmployeeDashboard.ViewModels
             syncContext = SynchronizationContext.Current;
             Initialize();
         }
-
-        private CancellationTokenSource pingToken;
         private AccessToken accessToken;
         private IDisposable updateSubscription;
 
@@ -120,23 +118,6 @@ namespace SummonEmployeeDashboard.ViewModels
                     } catch (Exception)
                     {
                     }
-                    IObservable<long> observable = Observable.Interval(TimeSpan.FromSeconds(60));
-
-                    // Token for cancelation
-                    pingToken = new CancellationTokenSource();
-
-                    // Subscribe the obserable to the task on execution.
-                    observable.Subscribe(async x => {
-                        var valid = await Ping(accessToken.Id);
-                        if (!valid)
-                        {
-                            pingToken.Cancel();
-                            syncContext.Post(o =>
-                            {
-                                Login();
-                            }, null);
-                        }
-                    }, pingToken.Token);
                     return;
                 }
             }
@@ -224,6 +205,7 @@ namespace SummonEmployeeDashboard.ViewModels
                     {
                         var incomingRequestWindow = new SummonRequestWindow(update.Request);
                         incomingRequestWindow.Show();
+                        incomingRequestWindow.WindowState = WindowState.Normal;
                     }, null);
                     break;
                 case UpdateType.Cancel:

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
@@ -17,6 +18,23 @@ namespace SummonEmployeeDashboard
     /// </summary>
     public partial class App : Application
     {
+        private static Mutex _mutex = null;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            const string appName = "MyAppName";
+
+            _mutex = new Mutex(true, appName, out bool createdNew);
+
+            if (!createdNew)
+            {
+                //app is already running! Exiting the application  
+                Current.Shutdown();
+            }
+
+            base.OnStartup(e);
+        }
+
         private string serverIP = null;
         public string ServerIP
         {
@@ -31,6 +49,7 @@ namespace SummonEmployeeDashboard
             set
             {
                 serverIP = value;
+                client = new RestClient(URL);
                 SaveServerIP(serverIP);
             }
         }
@@ -41,7 +60,7 @@ namespace SummonEmployeeDashboard
             {
                 const string localhost = "localhost";
 
-                return "http://" + (string.IsNullOrWhiteSpace(ServerIP) ? localhost : ServerIP) + ":3000/api/";
+                return (string.IsNullOrWhiteSpace(ServerIP) ? localhost : ServerIP) + "/api/";
             }
         }
         private IRestClient client = null;

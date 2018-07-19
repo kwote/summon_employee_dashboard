@@ -22,15 +22,36 @@ namespace SummonEmployeeDashboard.ViewModels
             get { return person; }
             set
             {
+                bool visibilityChanged = false;
+                if ((person == null) != (value == null))
+                {
+                    visibilityChanged = true;
+                }
+                bool nameChanged = person?.FullName != value?.FullName;
                 person = value;
                 OnPropertyChanged("Person");
-                OnPropertyChanged("SelfVisibility");
+                if (visibilityChanged)
+                {
+                    OnPropertyChanged("SelfVisibility");
+                }
+                if (nameChanged)
+                {
+                    OnPropertyChanged("FullName");
+                }
             }
         }
 
         public Visibility SelfVisibility
         {
             get { return person != null ? Visibility.Visible : Visibility.Hidden; }
+        }
+
+        public string FullName
+        {
+            get
+            {
+                return person?.Id == App.GetApp().AccessToken?.UserId ? "Я" : person?.FullName;
+            }
         }
 
         private ICommand summonCommand;

@@ -1,12 +1,14 @@
 ﻿using EvtSource;
 using Newtonsoft.Json;
 using SummonEmployeeDashboard.Models;
+using SummonEmployeeDashboard.Rest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SummonEmployeeDashboard
@@ -14,8 +16,12 @@ namespace SummonEmployeeDashboard
     public class EventBus
     {
         private Subject<SummonRequestUpdate> subject = new Subject<SummonRequestUpdate>();
+        // TODO add message bus
         private IObservable<SummonRequestUpdate> eventBus;
         private EventSourceReader evt;
+        private bool connected = false;
+
+        private CancellationTokenSource pingToken = new CancellationTokenSource();
 
         public EventBus()
         {
@@ -26,13 +32,44 @@ namespace SummonEmployeeDashboard
 
         public async void Initialize(AccessToken accessToken)
         {
-            if (evt != null) return;
+            CloseConnection();
+            await OpenConnection(accessToken);
+            SchedulePing();
+        }
+
+        private void SchedulePing()
+        {
+            pingToken.Cancel();
+            pingToken = new CancellationTokenSource();
+            IObservable<long> observable = Observable.Interval(TimeSpan.FromSeconds(60));
+
+            // Subscribe the obserable to the task on execution.
+            observable.Subscribe(async x => {
+                var accessToken = App.GetApp().AccessToken;
+                var valid = await App.GetApp().GetService<PeopleService>().Ping(accessToken.Id);
+                if (valid && !connected)
+                {
+                    await OpenConnection(accessToken);
+                } else if (!valid && connected)
+                {
+                    CloseConnection();
+                    /*syncContext.Post(o =>
+                    {
+                        Login();
+                    }, null);*/
+                }
+            }, pingToken.Token);
+        }
+
+        private async Task OpenConnection(AccessToken accessToken)
+        {
             var condition = string.Format(Format, accessToken.UserId, accessToken.UserId);
             Uri url = new Uri(
                 App.GetApp().URL + "summonrequests/change-stream?access_token=" + accessToken.Id + "&options=" + condition
             );
             evt = new EventSourceReader(url);
-            evt.MessageReceived += (object sender, EventSourceMessageEventArgs e) => {
+            evt.MessageReceived += (object sender, EventSourceMessageEventArgs e) =>
+            {
                 Console.WriteLine($"{e.Event} : {e.Message}");
                 var message = JsonConvert.DeserializeObject<SummonRequestMessage>(e.Message);
                 if (message != null)
@@ -75,16 +112,25 @@ namespace SummonEmployeeDashboard
             {
                 Console.WriteLine($"Retry: {e.ReconnectDelay} - Error: {e.Exception.Message}");
                 await Task.Delay(e.ReconnectDelay);
-                evt.Start(); // Reconnect to the same URL
+                evt = evt.Start(); // Reconnect to the same URL
             };
             await Task.Run(() => { evt = evt.Start(); });
+            connected = true;
+        }
+
+        private void CloseConnection()
+        {
+            connected = false;
+
+            if (evt == null) return;
+            evt.Dispose();
+            evt = null;
         }
 
         public void Dispose()
         {
-            if (evt == null) return;
-            evt.Dispose();
-            evt = null;
+            CloseConnection();
+            pingToken.Cancel();
         }
 
         public IDisposable Subscribe(IObserver<SummonRequestUpdate> observer)

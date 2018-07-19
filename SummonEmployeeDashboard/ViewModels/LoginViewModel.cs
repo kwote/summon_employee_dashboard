@@ -98,6 +98,8 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void Register()
         {
+            App app = App.GetApp();
+            app.ServerIP = ServerIP;
             var registerWindow = new RegisterWindow();
             registerWindow.Show();
             CloseAction();
