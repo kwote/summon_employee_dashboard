@@ -21,6 +21,7 @@
                 <DataTemplate>
                     <StackPanel Margin="5">
                         <TextBlock FontSize="18" Text="{Binding Path=FullName}" />
+                        <TextBlock FontSize="10" Text="{Binding Path=Online}" />
                         <TextBlock Text="{Binding Path=Person.Post}" />
                         <TextBlock Text="{Binding Path=Person.Email}" />
                         <TextBlock Text="{Binding Path=Person.Phone}"/>

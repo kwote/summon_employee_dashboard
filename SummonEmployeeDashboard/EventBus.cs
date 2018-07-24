@@ -29,6 +29,7 @@ namespace SummonEmployeeDashboard
         }
 
         private const string Format = "{{\"where\":{{\"or\":[{{\"targetId\":{0}}},{{\"callerId\":{1}}}]}}}}";
+        public const int PING_PERIOD = 60;
 
         public async void Initialize(AccessToken accessToken)
         {
@@ -41,9 +42,9 @@ namespace SummonEmployeeDashboard
         {
             pingToken.Cancel();
             pingToken = new CancellationTokenSource();
-            IObservable<long> observable = Observable.Interval(TimeSpan.FromSeconds(60));
+            IObservable<long> observable = Observable.Interval(TimeSpan.FromSeconds(PING_PERIOD));
 
-            // Subscribe the obserable to the task on execution.
+            // Subscribe the observable to the task on execution.
             observable.Subscribe(async x => {
                 var accessToken = App.GetApp().AccessToken;
                 var valid = await App.GetApp().GetService<PeopleService>().Ping(accessToken.Id);

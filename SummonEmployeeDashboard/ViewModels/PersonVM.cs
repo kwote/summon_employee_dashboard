@@ -54,6 +54,15 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        public string Online
+        {
+            get
+            {
+                var date = person?.LastActiveTime?.AddSeconds(EventBus.PING_PERIOD);
+                return date?.CompareTo(DateTime.Now) > 0 ? "Онлайн" : "Оффлайн";
+            }
+        }
+
         private ICommand summonCommand;
 
         public ICommand SummonCommand

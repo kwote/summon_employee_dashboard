@@ -18,7 +18,7 @@ namespace SummonEmployeeDashboard
         private string _post = "";
         private string _email = "";
         private string _phone = "";
-        private string _lastActiveTime = "";
+        private DateTime? _lastActiveTime = null;
 
         public string FullName
         {
@@ -92,7 +92,7 @@ namespace SummonEmployeeDashboard
             }
         }
         [JsonProperty(PropertyName = "lastActiveTime")]
-        public string LastActiveTime
+        public DateTime? LastActiveTime
         {
             get => _lastActiveTime; set
             {
