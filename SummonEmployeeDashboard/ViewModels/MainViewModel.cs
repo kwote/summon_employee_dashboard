@@ -65,6 +65,17 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        private StatisticsViewModel statisticsVM;
+        public StatisticsViewModel StatisticsVM
+        {
+            get { return statisticsVM; }
+            set
+            {
+                statisticsVM = value;
+                OnPropertyChanged("StatisticsVM");
+            }
+        }
+
         private Role role = null;
         public Role Role
         {
@@ -110,6 +121,7 @@ namespace SummonEmployeeDashboard.ViewModels
                     ReloadEditPeople();
                     ReloadRequests(true);
                     ReloadRequests(false);
+                    ReloadStatistics();
                     updateSubscription = app.EventBus.Subscribe(this);
                     app.EventBus.Initialize(accessToken);
                     try
@@ -175,6 +187,11 @@ namespace SummonEmployeeDashboard.ViewModels
                 IncomingRequestsVM = new RequestsViewModel(true);
             else
                 OutgoingRequestsVM = new RequestsViewModel(false);
+        }
+
+        private void ReloadStatistics()
+        {
+            StatisticsVM = new StatisticsViewModel();
         }
 
         private static async Task<Boolean> Ping(string accessToken)

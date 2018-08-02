@@ -74,6 +74,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="EventBus.cs" />
+    <Compile Include="Models\Stat.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\RegisterPerson.cs" />
@@ -95,10 +96,15 @@
     <Compile Include="Utils.cs" />
     <Compile Include="ViewModels\EditPersonVM.cs" />
     <Compile Include="ViewModels\EditPeopleViewModel.cs" />
+    <Compile Include="ViewModels\StatVM.cs" />
+    <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\SummonRequestVM.cs" />
     <Compile Include="ViewModels\PersonVM.cs" />
     <Compile Include="Views\PeopleEditor.xaml.cs">
       <DependentUpon>PeopleEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StatsViewer.xaml.cs">
+      <DependentUpon>StatsViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RequestViewer.xaml.cs">
       <DependentUpon>RequestViewer.xaml</DependentUpon>
@@ -152,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PeopleEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StatsViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -25,6 +25,12 @@
             </TabItem.Header>
             <local:RequestsViewer DataContext="{Binding OutgoingRequestsVM}"/>
         </TabItem>
+        <TabItem x:Name="statisticsTab">
+            <TabItem.Header>
+                Статистика
+            </TabItem.Header>
+            <local:StatsViewer DataContext="{Binding StatisticsVM}"/>
+        </TabItem>
         <TabItem x:Name="departments" Visibility="Collapsed">
             <TabItem.Header>
                 Отделы

@@ -64,6 +64,27 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<AccessToken>(request);
         }
 
+        public async Task<List<Stat>> GetStatistics(int userId, string accessToken)
+        {
+            List<Stat> stats = new List<Stat>();
+            Task[] tasks = new Task[7];
+            for (int i = 0; i < 7; ++i)
+            {
+                var date = DateTime.Now.AddDays(-7);
+                tasks[i] = Task.Run(async () => {
+                    var request = new RestRequest("people/statistics");
+                    request.AddQueryParameter("personId", userId.ToString());
+                    request.AddQueryParameter("date", Utils.GetStringTime(date));
+                    request.AddHeader("Authorization", accessToken);
+                    var stat = await RestCall<Stat>(request);
+                    stats.Add(stat);
+                });
+            }
+            await Task.WhenAll(tasks);
+            stats.Sort((s1, s2) => { return s1.Date.Value.CompareTo(s2.Date.Value); });
+            return stats;
+        }
+
         public async Task<string> Logout(string accessToken)
         {
             var request = new RestRequest("people/logout")
