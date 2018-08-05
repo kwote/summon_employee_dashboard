@@ -94,14 +94,19 @@
       <DependentUpon>SummonRequestWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <Compile Include="ViewModels\PeopleStatsViewModel.cs" />
     <Compile Include="ViewModels\EditPersonVM.cs" />
     <Compile Include="ViewModels\EditPeopleViewModel.cs" />
+    <Compile Include="ViewModels\PersonWithStatsVM.cs" />
     <Compile Include="ViewModels\StatVM.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\SummonRequestVM.cs" />
     <Compile Include="ViewModels\PersonVM.cs" />
     <Compile Include="Views\PeopleEditor.xaml.cs">
       <DependentUpon>PeopleEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PeopleStatsViewer.xaml.cs">
+      <DependentUpon>PeopleStatsViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StatsViewer.xaml.cs">
       <DependentUpon>StatsViewer.xaml</DependentUpon>
@@ -158,6 +163,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PeopleEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PeopleStatsViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

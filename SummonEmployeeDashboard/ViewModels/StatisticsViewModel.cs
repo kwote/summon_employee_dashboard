@@ -16,6 +16,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class StatisticsViewModel : INotifyPropertyChanged
     {
+        private int personId;
         private StatVM selectedStat;
         public StatVM SelectedStat
         {
@@ -63,9 +64,10 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private readonly SynchronizationContext syncContext;
 
-        public StatisticsViewModel()
+        public StatisticsViewModel(int personId)
         {
             syncContext = SynchronizationContext.Current;
+            this.personId = personId;
             Initialize();
         }
 
@@ -80,7 +82,7 @@ namespace SummonEmployeeDashboard.ViewModels
             {
                 AccessToken accessToken = App.GetApp().AccessToken;
                 SelectedStat = new StatVM();
-                var stats = await App.GetApp().GetService<PeopleService>().GetStatistics(accessToken.UserId, accessToken.Id);
+                var stats = await App.GetApp().GetService<PeopleService>().GetStatistics(personId, accessToken.Id);
                 Stats = new ObservableCollection<StatVM>(stats.ConvertAll(s => new StatVM() { Stat = s }));
             }
             catch (Exception)

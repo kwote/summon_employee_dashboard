@@ -42,6 +42,12 @@
             </TabItem.Header>
             <local:PeopleEditor DataContext="{Binding EditPeopleVM}"/>
         </TabItem>
+        <TabItem x:Name="allStatsTab" Visibility="{Binding AdminVisible}">
+            <TabItem.Header>
+                Статистика (все)
+            </TabItem.Header>
+            <local:PeopleStatsViewer DataContext="{Binding PeopleStatsVM}"/>
+        </TabItem>
         <TabItem x:Name="settingsTab">
             <TabItem.Header>
                 Настройки

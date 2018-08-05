@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SummonEmployeeDashboard.StatsViewer"
+﻿<UserControl x:Class="SummonEmployeeDashboard.PeopleStatsViewer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,31 +6,30 @@
              xmlns:local="clr-namespace:SummonEmployeeDashboard"
              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="0.1*" />
         </Grid.RowDefinitions>
 
-        <ListBox ItemsSource="{Binding Stats}"
-                     SelectedItem="{Binding SelectedStat}">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
+        <ListBox Grid.Column="0" ItemsSource="{Binding People}"
+                     SelectedItem="{Binding SelectedPerson}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">
-                        <TextBlock Text="{Binding Path=Date}" />
-                        <TextBlock Text="{Binding Path=Incoming}" />
-                        <TextBlock Text="{Binding Path=Outgoing}" />
-                        <TextBlock Text="{Binding Path=Accepted}" />
-                        <TextBlock Text="{Binding Path=Rejected}" />
-                        <TextBlock Text="{Binding Path=Pending}" />
+                        <TextBlock FontSize="18" Text="{Binding Path=Person.FullName}" />
+                        <TextBlock FontSize="10" Text="{Binding Path=Person.Online}" />
+                        <TextBlock Text="{Binding Path=Person.Person.Post}" />
+                        <TextBlock Text="{Binding Path=Person.Person.Email}" />
+                        <TextBlock Text="{Binding Path=Person.Person.Phone}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <Button Grid.Row="1" Command="{Binding Path=ReloadCommand}">Перегрузить</Button>
+        <local:StatsViewer DataContext="{Binding SelectedPerson.Stats}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
     </Grid>
 </UserControl>

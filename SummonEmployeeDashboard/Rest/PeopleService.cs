@@ -70,14 +70,20 @@ namespace SummonEmployeeDashboard.Rest
             Task[] tasks = new Task[7];
             for (int i = 0; i < 7; ++i)
             {
-                var date = DateTime.Now.AddDays(-7);
+                var date = DateTime.Now.AddDays(-7-i);
                 tasks[i] = Task.Run(async () => {
-                    var request = new RestRequest("people/statistics");
-                    request.AddQueryParameter("personId", userId.ToString());
-                    request.AddQueryParameter("date", Utils.GetStringTime(date));
-                    request.AddHeader("Authorization", accessToken);
-                    var stat = await RestCall<Stat>(request);
-                    stats.Add(stat);
+                    try
+                    {
+                        var request = new RestRequest("people/statistics");
+                        request.AddQueryParameter("personId", userId.ToString());
+                        request.AddQueryParameter("date", Utils.GetStringTime(date));
+                        request.AddHeader("Authorization", accessToken);
+                        var stat = await RestCall<Stat>(request);
+                        stats.Add(stat);
+                    } catch (Exception)
+                    {
+
+                    }
                 });
             }
             await Task.WhenAll(tasks);

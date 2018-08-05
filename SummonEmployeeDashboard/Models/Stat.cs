@@ -9,6 +9,9 @@ namespace SummonEmployeeDashboard.Models
         private DateTime? date = null;
         private int incoming;
         private int outgoing;
+        private int accepted;
+        private int rejected;
+        private int pending;
 
         public DateTime? Date
         {
@@ -34,6 +37,33 @@ namespace SummonEmployeeDashboard.Models
             {
                 outgoing = value;
                 OnPropertyChanged("Outgoing");
+            }
+        }
+
+        public int Accepted
+        {
+            get => accepted; set
+            {
+                accepted = value;
+                OnPropertyChanged("Accepted");
+            }
+        }
+
+        public int Rejected
+        {
+            get => rejected; set
+            {
+                rejected = value;
+                OnPropertyChanged("Rejected");
+            }
+        }
+
+        public int Pending
+        {
+            get => pending; set
+            {
+                pending = value;
+                OnPropertyChanged("Pending");
             }
         }
 

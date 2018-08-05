@@ -27,6 +27,14 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        public string Date
+        {
+            get
+            {
+                return Stat.Date?.ToShortDateString();
+            }
+        }
+
         public string Incoming
         {
             get
@@ -40,6 +48,30 @@ namespace SummonEmployeeDashboard.ViewModels
             get
             {
                 return "Исходящие: " + Stat.Outgoing;
+            }
+        }
+
+        public string Accepted
+        {
+            get
+            {
+                return "Принятые: " + Stat.Accepted;
+            }
+        }
+
+        public string Rejected
+        {
+            get
+            {
+                return "Отклонённые: " + Stat.Rejected;
+            }
+        }
+
+        public string Pending
+        {
+            get
+            {
+                return "Пропущенные: " + Stat.Pending;
             }
         }
 
