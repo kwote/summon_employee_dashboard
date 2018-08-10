@@ -242,6 +242,8 @@ namespace SummonEmployeeDashboard.ViewModels
                         var incomingRequestWindow = new SummonRequestWindow(update.Request);
                         incomingRequestWindow.Show();
                         incomingRequestWindow.WindowState = WindowState.Normal;
+                        incomingRequestWindow.ShowActivated = false;
+                        incomingRequestWindow.Activate();
                     }, null);
                     break;
                 case UpdateType.Cancel:

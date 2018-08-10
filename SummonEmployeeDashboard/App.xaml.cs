@@ -58,7 +58,7 @@ namespace SummonEmployeeDashboard
         {
             get
             {
-                const string localhost = "localhost";
+                const string localhost = "http://localhost:3000";
 
                 return (string.IsNullOrWhiteSpace(ServerIP) ? localhost : ServerIP) + "/api/";
             }

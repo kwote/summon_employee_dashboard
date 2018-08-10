@@ -44,7 +44,7 @@
         </TabItem>
         <TabItem x:Name="allStatsTab" Visibility="{Binding AdminVisible}">
             <TabItem.Header>
-                Статистика (все)
+                Статистика (все сотрудники)
             </TabItem.Header>
             <local:PeopleStatsViewer DataContext="{Binding PeopleStatsVM}"/>
         </TabItem>

@@ -70,7 +70,7 @@ namespace SummonEmployeeDashboard.Rest
             Task[] tasks = new Task[7];
             for (int i = 0; i < 7; ++i)
             {
-                var date = DateTime.Now.AddDays(-7-i);
+                var date = DateTime.Now.AddDays(-i);
                 tasks[i] = Task.Run(async () => {
                     try
                     {
