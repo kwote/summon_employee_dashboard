@@ -14,45 +14,45 @@ namespace SummonEmployeeDashboard.Rest
         {
         }
 
-        public async Task<List<Person>> ListPeople(string accessToken)
+        public List<Person> ListPeople(string accessToken)
         {
             var request = new RestRequest("people");
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<Person>>(request);
+            return RestCall<List<Person>>(request);
         }
 
-        public async Task<List<Person>> ListSummonPeople(string accessToken)
+        public List<Person> ListSummonPeople(string accessToken)
         {
             var request = new RestRequest("people/summon");
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<Person>>(request);
+            return RestCall<List<Person>>(request);
         }
 
-        public async Task<List<Role>> ListRoles()
+        public List<Role> ListRoles()
         {
             var request = new RestRequest("Roles");
             request.AddQueryParameter("filter[fields]", "id");
             request.AddQueryParameter("filter[fields]", "name");
-            return await RestCall<List<Role>>(request);
+            return RestCall<List<Role>>(request);
         }
 
-        public async Task<Role> GetRole(int personId, string accessToken)
+        public Role GetRole(int personId, string accessToken)
         {
             var request = new RestRequest("people/role");
             request.AddQueryParameter("userId", personId.ToString());
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<Role>(request);
+            return RestCall<Role>(request);
         }
 
-        public async Task<Person> GetPerson(int personId, string accessToken)
+        public Person GetPerson(int personId, string accessToken)
         {
             var request = new RestRequest("people/{id}");
-            request.AddUrlSegment("id", personId);
+            request.AddUrlSegment("id", personId.ToString());
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<Person>(request);
+            return RestCall<Person>(request);
         }
 
-        public async Task<AccessToken> Login(LoginCredentials credentials)
+        public AccessToken Login(LoginCredentials credentials)
         {
             var request = new RestRequest("people/login")
             {
@@ -61,24 +61,24 @@ namespace SummonEmployeeDashboard.Rest
             request.JsonSerializer = new CustomJsonSerializer();
             request.AddJsonBody(credentials);
             request.AddQueryParameter("include", "user");
-            return await RestCall<AccessToken>(request);
+            return RestCall<AccessToken>(request);
         }
 
-        public async Task<List<Stat>> GetStatistics(int userId, string accessToken)
+        public List<Stat> GetStatistics(int userId, string accessToken)
         {
             List<Stat> stats = new List<Stat>();
             Task[] tasks = new Task[7];
             for (int i = 0; i < 7; ++i)
             {
                 var date = DateTime.Now.AddDays(-i);
-                tasks[i] = Task.Run(async () => {
+                tasks[i] = Task.Factory.StartNew(() => {
                     try
                     {
                         var request = new RestRequest("people/statistics");
                         request.AddQueryParameter("personId", userId.ToString());
                         request.AddQueryParameter("date", Utils.GetStringTime(date));
                         request.AddHeader("Authorization", accessToken);
-                        var stat = await RestCall<Stat>(request);
+                        var stat = RestCall<Stat>(request);
                         stats.Add(stat);
                     } catch (Exception)
                     {
@@ -86,12 +86,12 @@ namespace SummonEmployeeDashboard.Rest
                     }
                 });
             }
-            await Task.WhenAll(tasks);
+            Task.WaitAll(tasks);
             stats.Sort((s1, s2) => { return s1.Date.Value.CompareTo(s2.Date.Value); });
             return stats;
         }
 
-        public async Task<string> Logout(string accessToken)
+        public void Logout(string accessToken)
         {
             var request = new RestRequest("people/logout")
             {
@@ -99,20 +99,20 @@ namespace SummonEmployeeDashboard.Rest
             };
             request.AddHeader("Authorization", accessToken);
             request.JsonSerializer = new CustomJsonSerializer();
-            return await RestCall(request);
+            RestCall(request);
         }
 
-        public async Task<Boolean> Ping(string accessToken)
+        public bool Ping(string accessToken)
         {
             var request = new RestRequest("people/ping")
             {
                 Method = Method.PUT
             };
             request.AddQueryParameter("token", accessToken);
-            return await RestCall<Boolean>(request);
+            return RestCall<Boolean>(request);
         }
 
-        public async Task<Boolean> ChooseRole(int personId, string role, string accessToken)
+        public bool ChooseRole(int personId, string role, string accessToken)
         {
             var request = new RestRequest("people/chooseRole")
             {
@@ -121,10 +121,10 @@ namespace SummonEmployeeDashboard.Rest
             request.AddQueryParameter("userId", personId.ToString());
             request.AddQueryParameter("role", role);
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<Boolean>(request);
+            return RestCall<Boolean>(request);
         }
 
-        public async Task<Person> Register(RegisterPerson registerPerson)
+        public Person Register(RegisterPerson registerPerson)
         {
             var request = new RestRequest("people")
             {
@@ -132,13 +132,13 @@ namespace SummonEmployeeDashboard.Rest
             };
             request.JsonSerializer = new CustomJsonSerializer();
             request.AddJsonBody(registerPerson);
-            return await RestCall<Person>(request);
+            return RestCall<Person>(request);
         }
 
-        public async Task<List<SummonRequest>> ListIncomingRequests(int targetId, string accessToken)
+        public List<SummonRequest> ListIncomingRequests(int targetId, string accessToken)
         {
             var request = new RestRequest("people/{id}/incomingRequests");
-            request.AddUrlSegment("id", targetId);
+            request.AddUrlSegment("id", targetId.ToString());
             var date = DateTime.Now.AddDays(-1);
             var filter = new Dictionary<string, object>()
             {
@@ -152,16 +152,16 @@ namespace SummonEmployeeDashboard.Rest
                 ["include"] = "caller",
                 ["order"] = "requested DESC"
             };
-            var filterStr = SimpleJson.SimpleJson.SerializeObject(filter);
+            var filterStr = SimpleJson.SerializeObject(filter);
             request.AddQueryParameter("filter", filterStr);
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<SummonRequest>>(request);
+            return RestCall<List<SummonRequest>>(request);
         }
 
-        public async Task<List<SummonRequest>> ListOutgoingRequests(int callerId, string accessToken)
+        public List<SummonRequest> ListOutgoingRequests(int callerId, string accessToken)
         {
             var request = new RestRequest("people/{id}/outgoingRequests");
-            request.AddUrlSegment("id", callerId);
+            request.AddUrlSegment("id", callerId.ToString());
             var date = DateTime.Now.AddDays(-1);
             var filter = new Dictionary<string, object>()
             {
@@ -175,10 +175,10 @@ namespace SummonEmployeeDashboard.Rest
                 ["include"] = "target",
                 ["order"] = "requested DESC"
             };
-            var filterStr = SimpleJson.SimpleJson.SerializeObject(filter);
+            var filterStr = SimpleJson.SerializeObject(filter);
             request.AddQueryParameter("filter", filterStr);
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<SummonRequest>>(request);
+            return RestCall<List<SummonRequest>>(request);
         }
     }
 }

@@ -14,19 +14,19 @@ namespace SummonEmployeeDashboard.Rest
         {
         }
 
-        public async Task<List<Department>> ListDepartments(string accessToken)
+        public List<Department> ListDepartments(string accessToken)
         {
             var request = new RestRequest("departments");
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<Department>>(request);
+            return RestCall<List<Department>>(request);
         }
 
-        public async Task<Department> GetDepartment(int departmentId, string accessToken)
+        public Department GetDepartment(int departmentId, string accessToken)
         {
             var request = new RestRequest("departments/{id}");
-            request.AddUrlSegment("id", departmentId);
+            request.AddUrlSegment("id", departmentId.ToString());
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<Department>(request);
+            return RestCall<Department>(request);
         }
     }
 }

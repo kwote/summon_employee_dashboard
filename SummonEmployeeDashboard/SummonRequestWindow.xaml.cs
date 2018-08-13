@@ -34,7 +34,6 @@ namespace SummonEmployeeDashboard
             viewModel = new SummonRequestVM(true) { Request = request, CloseAction = () => { Close(); } };
             DataContext = viewModel;
             SystemSounds.Asterisk.Play();
-            App.GetApp().EventBus.Subscribe(this);
         }
 
         public void OnCompleted()

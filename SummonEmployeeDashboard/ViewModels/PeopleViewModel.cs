@@ -69,22 +69,29 @@ namespace SummonEmployeeDashboard.ViewModels
             Reload();
         }
 
-        private async void Reload()
+        private void Reload()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                SelectedPerson = new PersonVM();
-                var people = await App.GetApp().GetService<PeopleService>().ListSummonPeople(accessToken.Id);
-                People = new ObservableCollection<PersonVM>(people.ConvertAll(p => new PersonVM() { Person = p }));
-            }
-            catch (Exception)
-            {
-            }
+                try
+                {
+                    App app = App.GetApp();
+                    AccessToken accessToken = app.AccessToken;
+                    var people = app.GetService<PeopleService>().ListSummonPeople(accessToken.Id);
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        SelectedPerson = new PersonVM();
+                        People = new ObservableCollection<PersonVM>(people.ConvertAll(p => new PersonVM() { Person = p }));
+                    }));
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

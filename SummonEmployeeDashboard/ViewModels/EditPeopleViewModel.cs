@@ -43,28 +43,43 @@ namespace SummonEmployeeDashboard.ViewModels
             Initialize();
         }
 
-        private async void Initialize()
+        private void Initialize()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
                 App app = App.GetApp();
                 var accessToken = app.AccessToken;
                 SelectedPerson = new EditPersonVM();
-                var roles = await app.GetService<PeopleService>().ListRoles();
-                var people = await app.GetService<PeopleService>().ListPeople(accessToken.Id);
-                People = new ObservableCollection<EditPersonVM>(
-                    people.ConvertAll(p1 => new EditPersonVM() {
-                        Person = p1,
-                        Roles = new ObservableCollection<Role>(roles)
-                    })
-                );
-            } catch (Exception)
-            {
-            }
+                try
+                {
+                    List<Role> roles = null;
+                    var rolesTask = Task.Factory.StartNew(() =>
+                    {
+                        roles = app.GetService<PeopleService>().ListRoles();
+                    });
+                    List<Person> people = null;
+                    var peopleTask = Task.Factory.StartNew(() =>
+                    {
+                        people = app.GetService<PeopleService>().ListPeople(accessToken.Id);
+                    });
+                    Task.WaitAll(rolesTask, peopleTask);
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        People = new ObservableCollection<EditPersonVM>(
+                            people.ConvertAll(p1 => new EditPersonVM() {
+                                Person = p1,
+                                Roles = new ObservableCollection<Role>(roles)
+                            })
+                        );
+                    }));
+                } catch (Exception)
+                {
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

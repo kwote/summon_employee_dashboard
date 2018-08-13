@@ -14,48 +14,48 @@ namespace SummonEmployeeDashboard.Rest
         {
         }
 
-        public async Task<Person> GetPerson(int personId, string accessToken)
+        public Person GetPerson(int personId, string accessToken)
         {
             var request = new RestRequest("people/{id}");
-            request.AddUrlSegment("id", personId);
+            request.AddUrlSegment("id", personId.ToString());
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<Person>(request);
+            return RestCall<Person>(request);
         }
 
-        public async Task<SummonRequest> Accept(int requestId, string accessToken)
+        public SummonRequest Accept(int requestId, string accessToken)
         {
             var request = new RestRequest("summonrequests/{id}/accept")
             {
                 Method = Method.PUT
             };
-            request.AddUrlSegment("id", requestId);
+            request.AddUrlSegment("id", requestId.ToString());
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<SummonRequest>(request);
+            return RestCall<SummonRequest>(request);
         }
 
-        public async Task<SummonRequest> Reject(int requestId, string accessToken)
+        public SummonRequest Reject(int requestId, string accessToken)
         {
             var request = new RestRequest("summonrequests/{id}/reject")
             {
                 Method = Method.PUT
             };
-            request.AddUrlSegment("id", requestId);
+            request.AddUrlSegment("id", requestId.ToString());
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<SummonRequest>(request);
+            return RestCall<SummonRequest>(request);
         }
 
-        public async Task<SummonRequest> Cancel(int requestId, string accessToken)
+        public SummonRequest Cancel(int requestId, string accessToken)
         {
             var request = new RestRequest("summonrequests/{id}/cancel")
             {
                 Method = Method.PUT
             };
-            request.AddUrlSegment("id", requestId);
+            request.AddUrlSegment("id", requestId.ToString());
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<SummonRequest>(request);
+            return RestCall<SummonRequest>(request);
         }
 
-        public async Task<SummonRequest> AddSummonRequest(AddSummonRequest add, string accessToken)
+        public SummonRequest AddSummonRequest(AddSummonRequest add, string accessToken)
         {
             var request = new RestRequest("summonrequests")
             {
@@ -64,27 +64,27 @@ namespace SummonEmployeeDashboard.Rest
             request.JsonSerializer = new CustomJsonSerializer();
             request.AddJsonBody(add);
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<SummonRequest>(request);
+            return RestCall<SummonRequest>(request);
         }
 
-        public async Task<List<SummonRequest>> ListIncomingRequests(int targetId, string accessToken)
+        public List<SummonRequest> ListIncomingRequests(int targetId, string accessToken)
         {
             var request = new RestRequest("people/{id}/incomingRequests");
-            request.AddUrlSegment("id", targetId);
+            request.AddUrlSegment("id", targetId.ToString());
             request.AddQueryParameter("filter[include]", "caller");
             request.AddQueryParameter("filter[order]", "requested DESC");
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<SummonRequest>>(request);
+            return RestCall<List<SummonRequest>>(request);
         }
 
-        public async Task<List<SummonRequest>> ListOutgoingRequests(int callerId, string accessToken)
+        public List<SummonRequest> ListOutgoingRequests(int callerId, string accessToken)
         {
             var request = new RestRequest("people/{id}/outgoingRequests");
-            request.AddUrlSegment("id", callerId);
+            request.AddUrlSegment("id", callerId.ToString());
             request.AddQueryParameter("filter[include]", "target");
             request.AddQueryParameter("filter[order]", "requested DESC");
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<SummonRequest>>(request);
+            return RestCall<List<SummonRequest>>(request);
         }
     }
 }

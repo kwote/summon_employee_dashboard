@@ -61,7 +61,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (registerCommand == null)
                 {
                     registerCommand = new RelayCommand(
-                        async param => await RegisterAsync(),
+                        param => RegisterAsync(),
                         param => CanRegister()
                     );
                 }
@@ -108,25 +108,33 @@ namespace SummonEmployeeDashboard.ViewModels
             return true;
         }
 
-        private async Task RegisterAsync()
+        private void RegisterAsync()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                var person = await App.GetApp().GetService<PeopleService>().Register(registerPerson);
-                if (person != null)
+                try
                 {
-                    var loginWindow = new LoginWindow();
-                    loginWindow.Show();
-                    CloseAction();
+                    App app = App.GetApp();
+                    var person = app.GetService<PeopleService>().Register(registerPerson);
+                    if (person != null)
+                    {
+                        app.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            var loginWindow = new LoginWindow();
+                            loginWindow.Show();
+                            CloseAction();
+                        }));
+                    }
                 }
-            } catch (Exception e)
-            {
-                Error = e.Message;
-            }
+                catch (Exception e)
+                {
+                    Error = e.Message;
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

@@ -16,7 +16,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class StatisticsViewModel : INotifyPropertyChanged
     {
-        private int personId;
+        private readonly int personId;
         private StatVM selectedStat;
         public StatVM SelectedStat
         {
@@ -76,22 +76,29 @@ namespace SummonEmployeeDashboard.ViewModels
             Reload();
         }
 
-        private async void Reload()
+        private void Reload()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                SelectedStat = new StatVM();
-                var stats = await App.GetApp().GetService<PeopleService>().GetStatistics(personId, accessToken.Id);
-                Stats = new ObservableCollection<StatVM>(stats.ConvertAll(s => new StatVM() { Stat = s }));
-            }
-            catch (Exception)
-            {
-            }
+                try
+                {
+                    App app = App.GetApp();
+                    AccessToken accessToken = app.AccessToken;
+                    var stats = app.GetService<PeopleService>().GetStatistics(personId, accessToken.Id);
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        SelectedStat = new StatVM();
+                        Stats = new ObservableCollection<StatVM>(stats.ConvertAll(s => new StatVM() { Stat = s }));
+                    }));
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

@@ -59,7 +59,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (chooseRoleCommand == null)
                 {
                     chooseRoleCommand = new RelayCommand(
-                        async param => await ChooseRole(),
+                        param => ChooseRole(),
                         param => CanChooseRole()
                     );
                 }
@@ -67,33 +67,47 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async Task ChooseRole()
+        private void ChooseRole()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                var accessToken = App.GetApp().AccessToken;
-                var success = await App.GetApp().GetService<PeopleService>().ChooseRole(person.Id, Role.Name, accessToken.Id);
-                if (success)
+                try
                 {
-                    initialRole = Role;
+                    App app = App.GetApp();
+                    var accessToken = app.AccessToken;
+                    var success = app.GetService<PeopleService>().ChooseRole(person.Id, Role.Name, accessToken.Id);
+                    if (success)
+                    {
+                        app.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            initialRole = Role;
+                        }));
+                    }
                 }
-            }
-            catch (Exception)
-            {
-            }
+                catch (Exception)
+                {
+                }
+            });
         }
 
-        public async void GetRole()
+        public void GetRole()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                var accessToken = App.GetApp().AccessToken;
-                var r = await App.GetApp().GetService<PeopleService>().GetRole(person.Id, accessToken.Id);
-                Role = initialRole = r;
-            }
-            catch (Exception)
-            {
-            }
+                try
+                {
+                    App app = App.GetApp();
+                    var accessToken = app.AccessToken;
+                    var r = app.GetService<PeopleService>().GetRole(person.Id, accessToken.Id);
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        Role = initialRole = r;
+                    }));
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
 
         private bool CanChooseRole()
@@ -111,7 +125,7 @@ namespace SummonEmployeeDashboard.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

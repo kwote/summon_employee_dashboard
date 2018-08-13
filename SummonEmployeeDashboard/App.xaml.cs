@@ -64,9 +64,10 @@ namespace SummonEmployeeDashboard
             }
         }
         private IRestClient client = null;
-        public EventBus EventBus { get; } = new EventBus();
 
         private AccessToken accessToken = null;
+        internal static double PING_PERIOD = 60;
+
         internal AccessToken AccessToken {
             get
             {

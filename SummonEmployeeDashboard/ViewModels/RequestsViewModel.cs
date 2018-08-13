@@ -75,28 +75,36 @@ namespace SummonEmployeeDashboard.ViewModels
         private void Initialize()
         {
             Reload();
-            App.GetApp().EventBus.Subscribe(this);
         }
 
-        private async void Reload()
+        private void Reload()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                SelectedRequest = new SummonRequestVM(Incoming);
-                var requests = Incoming
-                        ? await App.GetApp().GetService<PeopleService>().ListIncomingRequests(accessToken.UserId, accessToken.Id)
-                        : await App.GetApp().GetService<PeopleService>().ListOutgoingRequests(accessToken.UserId, accessToken.Id)
-                ;
-                Requests = new ObservableCollection<SummonRequestVM>(requests.ConvertAll(r => new SummonRequestVM(Incoming) { Request = r }));
-            }
-            catch (Exception)
-            {
-            }
+                try
+                {
+                    App app = App.GetApp();
+                    AccessToken accessToken = app.AccessToken;
+                    var requests = Incoming
+                            ? app.GetService<PeopleService>().ListIncomingRequests(accessToken.UserId, accessToken.Id)
+                            : app.GetService<PeopleService>().ListOutgoingRequests(accessToken.UserId, accessToken.Id)
+                    ;
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        SelectedRequest = new SummonRequestVM(Incoming);
+                        Requests = new ObservableCollection<SummonRequestVM>(
+                            requests.ConvertAll(r => new SummonRequestVM(Incoming) { Request = r })
+                        );
+                    }));
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

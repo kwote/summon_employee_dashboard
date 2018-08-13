@@ -100,18 +100,26 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async void Accept()
+        private void Accept()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<SummonRequestService>()
-                    .Accept(Request.Id, accessToken.Id);
-                CloseAction?.Invoke();
-            } catch (Exception)
-            {
+                try
+                {
+                    App app = App.GetApp();
+                    AccessToken accessToken = app.AccessToken;
+                    app.GetService<SummonRequestService>()
+                        .Accept(Request.Id, accessToken.Id);
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        CloseAction?.Invoke();
+                    }));
+                }
+                catch (Exception)
+                {
 
-            }
+                }
+            });
         }
 
         private bool CanAccept()
@@ -136,19 +144,26 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async void Reject()
+        private void Reject()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<SummonRequestService>()
-                    .Reject(Request.Id, accessToken.Id);
-                CloseAction?.Invoke();
-            }
-            catch (Exception)
-            {
+                try
+                {
+                    App app = App.GetApp();
+                    AccessToken accessToken = app.AccessToken;
+                    app.GetService<SummonRequestService>()
+                        .Reject(Request.Id, accessToken.Id);
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        CloseAction?.Invoke();
+                    }));
+                }
+                catch (Exception)
+                {
 
-            }
+                }
+            });
         }
 
         private bool CanReject()
@@ -173,18 +188,22 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async void Cancel()
+        private void Cancel()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<SummonRequestService>()
-                    .Cancel(Request.Id, accessToken.Id);
-            }
-            catch (Exception)
-            {
+                try
+                {
+                    App app = App.GetApp();
+                    AccessToken accessToken = app.AccessToken;
+                    app.GetService<SummonRequestService>()
+                        .Cancel(Request.Id, accessToken.Id);
+                }
+                catch (Exception)
+                {
 
-            }
+                }
+            });
         }
 
         private bool CanCancel()
@@ -203,7 +222,7 @@ namespace SummonEmployeeDashboard.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

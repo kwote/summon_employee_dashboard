@@ -11,10 +11,10 @@ namespace SummonEmployeeDashboard.Rest
     {
         public IRestClient Client { get; set; }
 
-        public async Task<T> RestCall<T>(RestRequest request)
+        public T RestCall<T>(RestRequest request) where T : new()
         {
-            var response = await Client.ExecuteTaskAsync<T>(request);
-            if (response.IsSuccessful)
+            var response = Client.Execute<T>(request);
+            if (Successful(response.StatusCode))
             {
                 return response.Data;
             }
@@ -24,10 +24,19 @@ namespace SummonEmployeeDashboard.Rest
             }
         }
 
-        public async Task<string> RestCall(RestRequest request)
+        private bool Successful(System.Net.HttpStatusCode code)
         {
-            var response = await Client.ExecuteTaskAsync(request);
-            if (response.IsSuccessful)
+            return code == System.Net.HttpStatusCode.OK || code == System.Net.HttpStatusCode.Created ||
+                code == System.Net.HttpStatusCode.Accepted || code == System.Net.HttpStatusCode.NonAuthoritativeInformation ||
+                code == System.Net.HttpStatusCode.NoContent || code == System.Net.HttpStatusCode.ResetContent ||
+                code == System.Net.HttpStatusCode.PartialContent
+                ;
+        }
+
+        public string RestCall(RestRequest request)
+        {
+            var response = Client.Execute(request);
+            if (Successful(response.StatusCode))
             {
                 return response.Content;
             }

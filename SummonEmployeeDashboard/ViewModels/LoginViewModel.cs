@@ -43,7 +43,7 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             CloseAction = action;
             LoginCommand = new RelayCommand(
-                async param => await Login(),
+                param => Login(),
                 param => CanLogin()
             );
             RegisterCommand = new RelayCommand(
@@ -76,24 +76,33 @@ namespace SummonEmployeeDashboard.ViewModels
             return true;
         }
 
-        private async Task Login()
+        private void Login()
         {
-            try
+            App app = App.GetApp();
+            app.ServerIP = ServerIP;
+            Task.Factory.StartNew(() =>
             {
-                App app = App.GetApp();
-                app.ServerIP = ServerIP;
-                var accessToken = await app.GetService<PeopleService>().Login(credentials);
-                if (accessToken != null)
+                try
                 {
-                    App.GetApp().AccessToken = accessToken;
-                    var mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    CloseAction();
+                    var accessToken = app.GetService<PeopleService>().Login(credentials);
+                    if (accessToken != null)
+                    {
+                        app.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            app.AccessToken = accessToken;
+                            var mainWindow = new MainWindow();
+                            mainWindow.Show();
+                            CloseAction();
+                        }));
+                    }
+                } catch (Exception e)
+                {
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        Error = e.Message;
+                    }));
                 }
-            } catch (Exception e)
-            {
-                Error = e.Message;
-            }
+            });
         }
 
         private void Register()
@@ -120,7 +129,7 @@ namespace SummonEmployeeDashboard.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

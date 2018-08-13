@@ -58,7 +58,7 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             get
             {
-                var date = person?.LastActiveTime?.AddSeconds(EventBus.PING_PERIOD);
+                var date = person?.LastActiveTime?.AddSeconds(App.PING_PERIOD);
                 return date?.CompareTo(DateTime.Now) > 0 ? "Онлайн" : "Оффлайн";
             }
         }
@@ -91,21 +91,25 @@ namespace SummonEmployeeDashboard.ViewModels
             return accessToken?.UserId != person?.Id;
         }
 
-        private async void Summon()
+        private void Summon()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                var accessToken = App.GetApp().AccessToken;
-                var add = new AddSummonRequest()
+                try
                 {
-                    CallerId = accessToken.UserId,
-                    TargetId = person.Id
-                };
-                await App.GetApp().GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
-            }
-            catch (Exception)
-            {
-            }
+                    App app = App.GetApp();
+                    var accessToken = app.AccessToken;
+                    var add = new AddSummonRequest()
+                    {
+                        CallerId = accessToken.UserId,
+                        TargetId = person.Id
+                    };
+                    app.GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
 
         private void Initialize()
@@ -113,7 +117,7 @@ namespace SummonEmployeeDashboard.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
