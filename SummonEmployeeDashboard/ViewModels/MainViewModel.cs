@@ -171,6 +171,7 @@ namespace SummonEmployeeDashboard.ViewModels
             {
                 App app = App.GetApp();
                 await app.GetService<PeopleService>().Logout(app.AccessToken.Id);
+                app.EventBus.Dispose();
                 Login();
             }
             catch (Exception)

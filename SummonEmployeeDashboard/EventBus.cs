@@ -113,9 +113,9 @@ namespace SummonEmployeeDashboard
             {
                 Console.WriteLine($"Retry: {e.ReconnectDelay} - Error: {e.Exception.Message}");
                 await Task.Delay(e.ReconnectDelay);
-                evt = evt.Start(); // Reconnect to the same URL
+                evt = evt?.Start(); // Reconnect to the same URL
             };
-            await Task.Run(() => { evt = evt.Start(); });
+            await Task.Run(() => { evt = evt?.Start(); });
             connected = true;
         }
 
@@ -123,8 +123,7 @@ namespace SummonEmployeeDashboard
         {
             connected = false;
 
-            if (evt == null) return;
-            evt.Dispose();
+            evt?.Dispose();
             evt = null;
         }
 
