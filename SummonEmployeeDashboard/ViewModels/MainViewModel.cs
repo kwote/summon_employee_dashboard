@@ -99,8 +99,6 @@ namespace SummonEmployeeDashboard.ViewModels
             get { return role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
         }
 
-        private readonly SynchronizationContext syncContext;
-
         public MainViewModel()
         {
             Initialize();
@@ -144,7 +142,7 @@ namespace SummonEmployeeDashboard.ViewModels
                         }));
 
                         var autoEvent = new AutoResetEvent(false);
-                        pingTimer = new Timer((o) =>
+                        pingTimer = new Timer(o =>
                         {
                             Task.Factory.StartNew(() =>
                             {
@@ -152,20 +150,14 @@ namespace SummonEmployeeDashboard.ViewModels
                                 if (!valid)
                                 {
                                     pingTimer.Dispose();
-                                    app.Dispatcher.BeginInvoke(new Action(() =>
-                                    {
-                                        Login();
-                                    }));
+                                    app.Dispatcher.BeginInvoke(new Action(Login));
                                 }
                             });
                         }, autoEvent, App.PING_PERIOD * 1000, App.PING_PERIOD * 1000);
                         return;
                     }
                 }
-                app.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    Login();
-                }));
+                app.Dispatcher.BeginInvoke(new Action(Login));
             });
         }
 
@@ -195,10 +187,7 @@ namespace SummonEmployeeDashboard.ViewModels
                     App app = App.GetApp();
                     app.GetService<PeopleService>().Logout(app.AccessToken.Id);
                     pingTimer?.Dispose();
-                    app.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        Login();
-                    }));
+                    app.Dispatcher.BeginInvoke(new Action(Login));
                 }
                 catch (Exception)
                 {
