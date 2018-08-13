@@ -104,8 +104,9 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<SummonRequestService>()
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
+                await app.GetService<SummonRequestService>()
                     .Accept(Request.Id, accessToken.Id);
                 CloseAction?.Invoke();
             } catch (Exception)
@@ -140,8 +141,9 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<SummonRequestService>()
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
+                await app.GetService<SummonRequestService>()
                     .Reject(Request.Id, accessToken.Id);
                 CloseAction?.Invoke();
             }
@@ -177,8 +179,9 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                await App.GetApp().GetService<SummonRequestService>()
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
+                await app.GetService<SummonRequestService>()
                     .Cancel(Request.Id, accessToken.Id);
             }
             catch (Exception)

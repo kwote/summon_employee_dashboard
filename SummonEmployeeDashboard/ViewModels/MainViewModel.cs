@@ -125,7 +125,7 @@ namespace SummonEmployeeDashboard.ViewModels
             accessToken = app.AccessToken;
             if (accessToken != null)
             {
-                var isValid = await Ping(accessToken.Id);
+                var isValid = await Ping(accessToken.Id, app);
                 if (isValid)
                 {
                     ReloadPeople();
@@ -157,7 +157,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (logoutCommand == null)
                 {
                     logoutCommand = new RelayCommand(
-                        async param => await Logout(),
+                        param => Logout(),
                         param => CanLogout()
                     );
                 }
@@ -165,12 +165,12 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async Task Logout()
+        private async void Logout()
         {
             try
             {
                 App app = App.GetApp();
-                var accessToken = await app.GetService<PeopleService>().Logout(app.AccessToken.Id);
+                await app.GetService<PeopleService>().Logout(app.AccessToken.Id);
                 Login();
             }
             catch (Exception)
@@ -213,11 +213,11 @@ namespace SummonEmployeeDashboard.ViewModels
             PeopleStatsVM = new PeopleStatsViewModel();
         }
 
-        private static async Task<Boolean> Ping(string accessToken)
+        private async Task<Boolean> Ping(string accessToken, App app)
         {
             try
             {
-               return await App.GetApp().GetService<PeopleService>().Ping(accessToken);
+               return await app.GetService<PeopleService>().Ping(accessToken);
             } catch (Exception)
             {
             }

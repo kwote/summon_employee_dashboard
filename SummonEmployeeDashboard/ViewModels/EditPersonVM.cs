@@ -71,8 +71,9 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                var accessToken = App.GetApp().AccessToken;
-                var success = await App.GetApp().GetService<PeopleService>().ChooseRole(person.Id, Role.Name, accessToken.Id);
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
+                var success = await app.GetService<PeopleService>().ChooseRole(person.Id, Role.Name, accessToken.Id);
                 if (success)
                 {
                     initialRole = Role;
@@ -87,8 +88,9 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                var accessToken = App.GetApp().AccessToken;
-                var r = await App.GetApp().GetService<PeopleService>().GetRole(person.Id, accessToken.Id);
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
+                var r = await app.GetService<PeopleService>().GetRole(person.Id, accessToken.Id);
                 Role = initialRole = r;
             }
             catch (Exception)

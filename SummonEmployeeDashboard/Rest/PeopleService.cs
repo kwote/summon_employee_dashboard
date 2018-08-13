@@ -91,7 +91,7 @@ namespace SummonEmployeeDashboard.Rest
             return stats;
         }
 
-        public async Task<string> Logout(string accessToken)
+        public async Task Logout(string accessToken)
         {
             var request = new RestRequest("people/logout")
             {
@@ -99,7 +99,7 @@ namespace SummonEmployeeDashboard.Rest
             };
             request.AddHeader("Authorization", accessToken);
             request.JsonSerializer = new CustomJsonSerializer();
-            return await RestCall(request);
+            await RestCall(request);
         }
 
         public async Task<Boolean> Ping(string accessToken)

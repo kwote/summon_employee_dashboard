@@ -95,13 +95,14 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                var accessToken = App.GetApp().AccessToken;
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
                 var add = new AddSummonRequest()
                 {
                     CallerId = accessToken.UserId,
                     TargetId = person.Id
                 };
-                await App.GetApp().GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
+                await app.GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
             }
             catch (Exception)
             {

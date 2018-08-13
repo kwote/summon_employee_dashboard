@@ -82,12 +82,13 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
-                SelectedRequest = new SummonRequestVM(Incoming);
+                App app = App.GetApp();
+                var accessToken = app.AccessToken;
                 var requests = Incoming
-                        ? await App.GetApp().GetService<PeopleService>().ListIncomingRequests(accessToken.UserId, accessToken.Id)
-                        : await App.GetApp().GetService<PeopleService>().ListOutgoingRequests(accessToken.UserId, accessToken.Id)
+                        ? await app.GetService<PeopleService>().ListIncomingRequests(accessToken.UserId, accessToken.Id)
+                        : await app.GetService<PeopleService>().ListOutgoingRequests(accessToken.UserId, accessToken.Id)
                 ;
+                SelectedRequest = new SummonRequestVM(Incoming);
                 Requests = new ObservableCollection<SummonRequestVM>(requests.ConvertAll(r => new SummonRequestVM(Incoming) { Request = r }));
             }
             catch (Exception)

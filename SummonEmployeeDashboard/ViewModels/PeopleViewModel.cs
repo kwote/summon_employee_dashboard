@@ -73,9 +73,10 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             try
             {
-                AccessToken accessToken = App.GetApp().AccessToken;
+                App app = App.GetApp();
+                AccessToken accessToken = app.AccessToken;
+                var people = await app.GetService<PeopleService>().ListSummonPeople(accessToken.Id);
                 SelectedPerson = new PersonVM();
-                var people = await App.GetApp().GetService<PeopleService>().ListSummonPeople(accessToken.Id);
                 People = new ObservableCollection<PersonVM>(people.ConvertAll(p => new PersonVM() { Person = p }));
             }
             catch (Exception)

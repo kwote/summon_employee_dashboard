@@ -85,7 +85,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 var accessToken = await app.GetService<PeopleService>().Login(credentials);
                 if (accessToken != null)
                 {
-                    App.GetApp().AccessToken = accessToken;
+                    app.AccessToken = accessToken;
                     var mainWindow = new MainWindow();
                     mainWindow.Show();
                     CloseAction();
