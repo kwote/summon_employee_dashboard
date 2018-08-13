@@ -117,7 +117,6 @@ namespace SummonEmployeeDashboard.ViewModels
                 }
                 catch (Exception)
                 {
-
                 }
             });
         }
@@ -161,7 +160,6 @@ namespace SummonEmployeeDashboard.ViewModels
                 }
                 catch (Exception)
                 {
-
                 }
             });
         }

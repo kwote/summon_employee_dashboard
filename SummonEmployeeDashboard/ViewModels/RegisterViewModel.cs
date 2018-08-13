@@ -61,7 +61,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 if (registerCommand == null)
                 {
                     registerCommand = new RelayCommand(
-                        param => RegisterAsync(),
+                        param => Register(),
                         param => CanRegister()
                     );
                 }
@@ -108,13 +108,13 @@ namespace SummonEmployeeDashboard.ViewModels
             return true;
         }
 
-        private void RegisterAsync()
+        private void Register()
         {
             Task.Factory.StartNew(() =>
             {
+                App app = App.GetApp();
                 try
                 {
-                    App app = App.GetApp();
                     var person = app.GetService<PeopleService>().Register(registerPerson);
                     if (person != null)
                     {
@@ -128,7 +128,10 @@ namespace SummonEmployeeDashboard.ViewModels
                 }
                 catch (Exception e)
                 {
-                    Error = e.Message;
+                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        Error = e.Message;
+                    }));
                 }
             });
         }

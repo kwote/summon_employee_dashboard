@@ -22,7 +22,7 @@ namespace SummonEmployeeDashboard
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            const string appName = "MyAppName";
+            const string appName = "SummonEmployeeDashboard";
 
             _mutex = new Mutex(true, appName, out bool createdNew);
 
@@ -66,7 +66,7 @@ namespace SummonEmployeeDashboard
         private IRestClient client = null;
 
         private AccessToken accessToken = null;
-        internal static double PING_PERIOD = 60;
+        internal static int PING_PERIOD = 60;
 
         internal AccessToken AccessToken {
             get
@@ -124,7 +124,7 @@ namespace SummonEmployeeDashboard
 
         public static App GetApp()
         {
-            return (App)App.Current;
+            return (App)Current;
         }
     }
 }

@@ -103,17 +103,17 @@ namespace SummonEmployeeDashboard.ViewModels
 
         public MainViewModel()
         {
-            syncContext = SynchronizationContext.Current;
             Initialize();
         }
 
         public MainViewModel(Action close)
         {
             CloseAction = close;
-            syncContext = SynchronizationContext.Current;
             Initialize();
         }
         private AccessToken accessToken;
+
+        private Timer pingTimer;
 
         private void Initialize()
         {
@@ -142,6 +142,23 @@ namespace SummonEmployeeDashboard.ViewModels
                             {
                             }
                         }));
+
+                        var autoEvent = new AutoResetEvent(false);
+                        pingTimer = new Timer((o) =>
+                        {
+                            Task.Factory.StartNew(() =>
+                            {
+                                var valid = Ping(accessToken.Id);
+                                if (!valid)
+                                {
+                                    pingTimer.Dispose();
+                                    app.Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        Login();
+                                    }));
+                                }
+                            });
+                        }, autoEvent, App.PING_PERIOD * 1000, App.PING_PERIOD * 1000);
                         return;
                     }
                 }
@@ -177,6 +194,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 {
                     App app = App.GetApp();
                     app.GetService<PeopleService>().Logout(app.AccessToken.Id);
+                    pingTimer?.Dispose();
                     app.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         Login();
