@@ -66,7 +66,6 @@ namespace SummonEmployeeDashboard
         private IRestClient client = null;
 
         private AccessToken accessToken = null;
-        internal static int PING_PERIOD = 60;
 
         internal AccessToken AccessToken {
             get

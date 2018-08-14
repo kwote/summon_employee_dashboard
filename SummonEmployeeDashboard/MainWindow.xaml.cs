@@ -33,5 +33,10 @@ namespace SummonEmployeeDashboard
             viewModel = new MainViewModel(() => { Close(); });
             DataContext = viewModel;
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            viewModel.OnClose();
+        }
     }
 }

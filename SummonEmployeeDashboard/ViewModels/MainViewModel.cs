@@ -1,5 +1,4 @@
-﻿using EvtSource;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SummonEmployeeDashboard.Models;
 using SummonEmployeeDashboard.Rest;
 using System;
@@ -7,8 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Net.Http;
-using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -18,7 +15,7 @@ using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class MainViewModel : INotifyPropertyChanged, IObserver<SummonRequestUpdate>
+    class MainViewModel : INotifyPropertyChanged
     {
         public Action CloseAction { get; set; }
         private PeopleViewModel peopleVM;
@@ -41,6 +38,11 @@ namespace SummonEmployeeDashboard.ViewModels
                 editPeopleVM = value;
                 OnPropertyChanged("EditPeopleVM");
             }
+        }
+
+        internal void OnClose()
+        {
+            EventBus.Instance.Unregister(this);
         }
 
         private RequestsViewModel incomingRequestsVM;
@@ -117,35 +119,61 @@ namespace SummonEmployeeDashboard.ViewModels
             Initialize();
         }
         private AccessToken accessToken;
-        private IDisposable updateSubscription;
 
-        private async void Initialize()
+        private void Initialize()
         {
-            App app = App.GetApp();
-            accessToken = app.AccessToken;
-            if (accessToken != null)
+            Task.Factory.StartNew(() =>
             {
-                var isValid = await Ping(accessToken.Id, app);
-                if (isValid)
+                App app = App.GetApp();
+                accessToken = app.AccessToken;
+                if (accessToken != null)
                 {
-                    ReloadPeople();
-                    ReloadEditPeople();
-                    ReloadRequests(true);
-                    ReloadRequests(false);
-                    ReloadStatistics();
-                    ReloadPeopleStatistics();
-                    updateSubscription = app.EventBus.Subscribe(this);
-                    app.EventBus.Initialize(accessToken);
-                    try
+                    var isValid = Ping(accessToken.Id);
+                    if (isValid)
                     {
-                        Role = await app.GetService<PeopleService>().GetRole(accessToken.User.Id, accessToken.Id);
-                    } catch (Exception)
-                    {
+                        var role = app.GetService<PeopleService>().GetRole(accessToken.User.Id, accessToken.Id);
+                        app.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            ReloadPeople();
+                            ReloadEditPeople();
+                            ReloadRequests(true);
+                            ReloadRequests(false);
+                            ReloadStatistics();
+                            ReloadPeopleStatistics();
+                            EventBus.Instance.Initialize(accessToken);
+                            EventBus.Instance.Register(this);
+                            try
+                            {
+                                Role = role;
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }));
+                        return;
                     }
-                    return;
                 }
+                app.Dispatcher.BeginInvoke(new Action(Login));
+            });
+        }
+
+        public void OnEvent(SummonRequestUpdate update)
+        {
+            switch (update.UpdateType)
+            {
+                case UpdateType.Create:
+                    syncContext.Post(o =>
+                    {
+                        var incomingRequestWindow = new SummonRequestWindow(update.Request);
+                        incomingRequestWindow.Show();
+                        incomingRequestWindow.WindowState = WindowState.Normal;
+                        incomingRequestWindow.ShowActivated = false;
+                        incomingRequestWindow.Activate();
+                    }, null);
+                    break;
+                case UpdateType.Cancel:
+                    break;
             }
-            Login();
         }
 
         private ICommand logoutCommand;
@@ -165,18 +193,20 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        private async void Logout()
+        private void Logout()
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                App app = App.GetApp();
-                await app.GetService<PeopleService>().Logout(app.AccessToken.Id);
-                app.EventBus.Dispose();
-                Login();
-            }
-            catch (Exception)
-            {
-            }
+                try
+                {
+                    App app = App.GetApp();
+                    app.GetService<PeopleService>().Logout(app.AccessToken.Id);
+                    app.Dispatcher.BeginInvoke(new Action(Login));
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
 
         private bool CanLogout()
@@ -214,12 +244,13 @@ namespace SummonEmployeeDashboard.ViewModels
             PeopleStatsVM = new PeopleStatsViewModel();
         }
 
-        private async Task<Boolean> Ping(string accessToken, App app)
+        private bool Ping(string accessToken)
         {
             try
             {
-               return await app.GetService<PeopleService>().Ping(accessToken);
-            } catch (Exception)
+                return App.GetApp().GetService<PeopleService>().Ping(accessToken);
+            }
+            catch (Exception)
             {
             }
             return false;
@@ -227,41 +258,13 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void Login()
         {
-            updateSubscription?.Dispose();
             var loginWindow = new LoginWindow();
             loginWindow.Show();
             CloseAction();
         }
 
-        public void OnNext(SummonRequestUpdate update)
-        {
-            switch (update.UpdateType)
-            {
-                case UpdateType.Create:
-                    syncContext.Post(o =>
-                    {
-                        var incomingRequestWindow = new SummonRequestWindow(update.Request);
-                        incomingRequestWindow.Show();
-                        incomingRequestWindow.WindowState = WindowState.Normal;
-                        incomingRequestWindow.ShowActivated = false;
-                        incomingRequestWindow.Activate();
-                    }, null);
-                    break;
-                case UpdateType.Cancel:
-                    break;
-            }
-        }
-
-        public void OnError(Exception error)
-        {
-        }
-
-        public void OnCompleted()
-        {
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

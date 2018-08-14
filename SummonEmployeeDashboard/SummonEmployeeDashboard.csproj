@@ -38,6 +38,9 @@
     <ApplicationIcon>person_icon_OGw_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>packages\log4net.2.0.8\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -66,6 +69,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EventBus.cs" />
+    <Compile Include="EventSource\ConnectedState.cs" />
+    <Compile Include="EventSource\ConnectingState.cs" />
+    <Compile Include="EventSource\DisconnectedState.cs" />
+    <Compile Include="EventSource\EventSource.cs" />
+    <Compile Include="EventSource\EventSourceState.cs" />
+    <Compile Include="EventSource\IConnectionState.cs" />
+    <Compile Include="EventSource\IServerResponse.cs" />
+    <Compile Include="EventSource\IWebRequester.cs" />
+    <Compile Include="EventSource\IWebRequesterFactory.cs" />
+    <Compile Include="EventSource\ServerResponse.cs" />
+    <Compile Include="EventSource\ServerSentEvent.cs" />
+    <Compile Include="EventSource\ServerSentEventReceivedEventArgs.cs" />
+    <Compile Include="EventSource\StateChangedEventArgs.cs" />
+    <Compile Include="EventSource\StringSplitter.cs" />
+    <Compile Include="EventSource\WatchDog.cs" />
+    <Compile Include="EventSource\WebRequester.cs" />
+    <Compile Include="EventSource\WebRequesterFactory.cs" />
     <Compile Include="Models\Stat.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Department.cs" />

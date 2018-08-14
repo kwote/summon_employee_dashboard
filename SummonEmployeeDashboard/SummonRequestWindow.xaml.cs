@@ -25,12 +25,39 @@ namespace SummonEmployeeDashboard
     {
         private SummonRequestVM viewModel;
 
+        private readonly SynchronizationContext syncContext;
+
         public SummonRequestWindow(SummonRequest request)
         {
             InitializeComponent();
+            syncContext = SynchronizationContext.Current;
             viewModel = new SummonRequestVM(true) { Request = request, CloseAction = () => { Close(); } };
             DataContext = viewModel;
+            EventBus.Instance.Register(this);
             SystemSounds.Asterisk.Play();
+        }
+
+        public void OnEvent(SummonRequestUpdate update)
+        {
+            switch (update.UpdateType)
+            {
+                case UpdateType.Create:
+                    syncContext.Post(o =>
+                    {
+                    }, null);
+                    break;
+                case UpdateType.Cancel:
+                    syncContext.Post(o =>
+                    {
+                        Close();
+                    }, null);
+                    break;
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            EventBus.Instance.Unregister(this);
         }
     }
 }
