@@ -14,6 +14,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class EditPeopleViewModel : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EditPeopleViewModel));
         private EditPersonVM selectedPersonVM;
 
         public EditPersonVM SelectedPerson
@@ -50,31 +51,38 @@ namespace SummonEmployeeDashboard.ViewModels
                 App app = App.GetApp();
                 var accessToken = app.AccessToken;
                 SelectedPerson = new EditPersonVM();
-                try
+                List<Role> roles = null;
+                var rolesTask = Task.Factory.StartNew(() =>
                 {
-                    List<Role> roles = null;
-                    var rolesTask = Task.Factory.StartNew(() =>
+                    try
                     {
                         roles = app.GetService<PeopleService>().ListRoles();
-                    });
-                    List<Person> people = null;
-                    var peopleTask = Task.Factory.StartNew(() =>
+                    } catch (Exception e)
+                    {
+                        log.Error("Failed to get roles", e);
+                    }
+                });
+                List<Person> people = null;
+                var peopleTask = Task.Factory.StartNew(() =>
+                {
+                    try
                     {
                         people = app.GetService<PeopleService>().ListPeople(accessToken.Id);
-                    });
-                    Task.WaitAll(rolesTask, peopleTask);
-                    app.Dispatcher.BeginInvoke(new Action(() =>
+                    } catch (Exception e)
                     {
-                        People = new ObservableCollection<EditPersonVM>(
-                            people.ConvertAll(p1 => new EditPersonVM() {
-                                Person = p1,
-                                Roles = new ObservableCollection<Role>(roles)
-                            })
-                        );
-                    }));
-                } catch (Exception)
+                        log.Error("Failed to list people", e);
+                    }
+                });
+                Task.WaitAll(rolesTask, peopleTask);
+                app.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                }
+                    People = new ObservableCollection<EditPersonVM>(
+                        people.ConvertAll(p1 => new EditPersonVM() {
+                            Person = p1,
+                            Roles = new ObservableCollection<Role>(roles)
+                        })
+                    );
+                }));
             });
         }
 

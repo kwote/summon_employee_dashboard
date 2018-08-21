@@ -15,6 +15,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class RegisterViewModel : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(RegisterViewModel));
         private RegisterPerson registerPerson;
         public RegisterPerson RegisterPerson
         {
@@ -128,9 +129,10 @@ namespace SummonEmployeeDashboard.ViewModels
                 }
                 catch (Exception e)
                 {
+                    log.Error("Failed to register "+registerPerson.ToString(), e);
                     app.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        Error = e.Message;
+                        Error = "Ошибка регистрации";
                     }));
                 }
             });

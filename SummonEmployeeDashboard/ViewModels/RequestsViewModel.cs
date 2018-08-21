@@ -16,6 +16,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class RequestsViewModel : INotifyPropertyChanged, IObserver<SummonRequestUpdate>
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(RequestsViewModel));
         private SummonRequestVM selectedRequest;
         public SummonRequestVM SelectedRequest
         {
@@ -97,8 +98,9 @@ namespace SummonEmployeeDashboard.ViewModels
                         );
                     }));
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    log.Error("Failed to load " + (Incoming ? "incoming" : "outgoing") + " requests", e);
                 }
             });
         }

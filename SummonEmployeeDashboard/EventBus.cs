@@ -14,6 +14,7 @@ namespace SummonEmployeeDashboard
 {
     public class EventBus
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EventBus));
         public static EventBus Instance { get { return instance ?? (instance = new EventBus()); } }
 
         public void Register(object listener)
@@ -122,9 +123,9 @@ namespace SummonEmployeeDashboard
             try
             {
                 return app.GetService<PeopleService>().Ping(accessToken);
-            } catch (Exception)
+            } catch (Exception e)
             {
-               
+                log.Error(e);
             }
             return false;
         }

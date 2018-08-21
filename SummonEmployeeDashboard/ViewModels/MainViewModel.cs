@@ -17,6 +17,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class MainViewModel : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(MainViewModel));
         public Action CloseAction { get; set; }
         private PeopleViewModel peopleVM;
         public PeopleViewModel PeopleVM
@@ -103,6 +104,16 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             get { return role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
         }
+        private bool active = false;
+        public bool Active
+        {
+            get { return active; }
+            set
+            {
+                active = value;
+                OnPropertyChanged("Active");
+            }
+        }
 
         private readonly SynchronizationContext syncContext;
 
@@ -128,12 +139,22 @@ namespace SummonEmployeeDashboard.ViewModels
                 accessToken = app.AccessToken;
                 if (accessToken != null)
                 {
-                    var isValid = Ping(accessToken.Id);
+                    var isValid = Ping(accessToken.Id, app);
                     if (isValid)
                     {
-                        var role = app.GetService<PeopleService>().GetRole(accessToken.User.Id, accessToken.Id);
+                        Role _role;
+                        try
+                        {
+                            _role = app.GetService<PeopleService>().GetRole(accessToken.User.Id, accessToken.Id);
+                        }
+                        catch (Exception e)
+                        {
+                            log.Error("Failed to get role", e);
+                            _role = null;
+                        }
                         app.Dispatcher.BeginInvoke(new Action(() =>
                         {
+                            Active = true;
                             ReloadPeople();
                             ReloadEditPeople();
                             ReloadRequests(true);
@@ -142,13 +163,7 @@ namespace SummonEmployeeDashboard.ViewModels
                             ReloadPeopleStatistics();
                             EventBus.Instance.Initialize(accessToken);
                             EventBus.Instance.Register(this);
-                            try
-                            {
-                                Role = role;
-                            }
-                            catch (Exception)
-                            {
-                            }
+                            Role = _role;
                         }));
                         return;
                     }
@@ -203,8 +218,9 @@ namespace SummonEmployeeDashboard.ViewModels
                     app.GetService<PeopleService>().Logout(app.AccessToken.Id);
                     app.Dispatcher.BeginInvoke(new Action(Login));
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    log.Error("Failed to logout", e);
                 }
             });
         }
@@ -244,14 +260,15 @@ namespace SummonEmployeeDashboard.ViewModels
             PeopleStatsVM = new PeopleStatsViewModel();
         }
 
-        private bool Ping(string accessToken)
+        private bool Ping(string accessToken, App app)
         {
             try
             {
-                return App.GetApp().GetService<PeopleService>().Ping(accessToken);
+                return app.GetService<PeopleService>().Ping(accessToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                log.Error("Ping failed", e);
             }
             return false;
         }
