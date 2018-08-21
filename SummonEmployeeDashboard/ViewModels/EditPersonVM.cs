@@ -87,7 +87,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 }
                 catch (Exception e)
                 {
-                    log.Error(e);
+                    log.Error("Failed to choose role", e);
                 }
             });
         }

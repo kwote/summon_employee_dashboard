@@ -95,7 +95,6 @@ namespace SummonEmployeeDashboard.ViewModels
                     {
                         app.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            loggingIn = false;
                             app.AccessToken = accessToken;
                             var mainWindow = new MainWindow();
                             mainWindow.Show();
@@ -105,12 +104,12 @@ namespace SummonEmployeeDashboard.ViewModels
                 } catch (Exception e)
                 {
                     log.Error("Failed to login", e);
-                    loggingIn = false;
                     app.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         Error = "Не удалось войти";
                     }));
                 }
+                loggingIn = false;
             });
         }
 
