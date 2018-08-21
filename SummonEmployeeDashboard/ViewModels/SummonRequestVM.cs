@@ -16,6 +16,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class SummonRequestVM : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(SummonRequestVM));
         public PersonVM Person { get; private set; }
         public Action CloseAction { get; set; }
 
@@ -109,9 +110,10 @@ namespace SummonEmployeeDashboard.ViewModels
                 await app.GetService<SummonRequestService>()
                     .Accept(Request.Id, accessToken.Id);
                 CloseAction?.Invoke();
-            } catch (Exception)
+            }
+            catch (Exception e)
             {
-
+                log.Error("Failed to accept request", e);
             }
         }
 
@@ -147,9 +149,9 @@ namespace SummonEmployeeDashboard.ViewModels
                     .Reject(Request.Id, accessToken.Id);
                 CloseAction?.Invoke();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                log.Error("Failed to reject request", e);
             }
         }
 
@@ -184,9 +186,9 @@ namespace SummonEmployeeDashboard.ViewModels
                 await app.GetService<SummonRequestService>()
                     .Cancel(Request.Id, accessToken.Id);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                log.Error("Failed to cancel request", e);
             }
         }
 

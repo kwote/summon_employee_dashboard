@@ -14,6 +14,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class PeopleStatsViewModel : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(PeopleStatsViewModel));
         private PersonWithStatsVM selectedPersonVM;
 
         public PersonWithStatsVM SelectedPerson
@@ -56,8 +57,10 @@ namespace SummonEmployeeDashboard.ViewModels
                 People = new ObservableCollection<PersonWithStatsVM>(
                     people.ConvertAll(p => new PersonWithStatsVM() { Person = new PersonVM() { Person = p } })
                 );
-            } catch (Exception)
+            }
+            catch (Exception e)
             {
+                log.Error("Failed to list people", e);
             }
         }
 

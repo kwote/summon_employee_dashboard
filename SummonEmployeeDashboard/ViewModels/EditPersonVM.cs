@@ -16,6 +16,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class EditPersonVM : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EditPersonVM));
         private Person person;
         public Person Person
         {
@@ -79,8 +80,9 @@ namespace SummonEmployeeDashboard.ViewModels
                     initialRole = Role;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                log.Error(e);
             }
         }
 
@@ -93,8 +95,9 @@ namespace SummonEmployeeDashboard.ViewModels
                 var r = await app.GetService<PeopleService>().GetRole(person.Id, accessToken.Id);
                 Role = initialRole = r;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                log.Error("Failed to get role", e);
             }
         }
 

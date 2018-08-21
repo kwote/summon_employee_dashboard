@@ -20,6 +20,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class MainViewModel : INotifyPropertyChanged, IObserver<SummonRequestUpdate>
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(MainViewModel));
         public Action CloseAction { get; set; }
         private PeopleViewModel peopleVM;
         public PeopleViewModel PeopleVM
@@ -101,6 +102,16 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             get { return role?.Name == "admin" ? Visibility.Visible : Visibility.Collapsed; }
         }
+        private bool active = false;
+        public bool Active
+        {
+            get { return active; }
+            set
+            {
+                active = value;
+                OnPropertyChanged("Active");
+            }
+        }
 
         private readonly SynchronizationContext syncContext;
 
@@ -128,6 +139,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 var isValid = await Ping(accessToken.Id, app);
                 if (isValid)
                 {
+                    Active = true;
                     ReloadPeople();
                     ReloadEditPeople();
                     ReloadRequests(true);
@@ -139,8 +151,9 @@ namespace SummonEmployeeDashboard.ViewModels
                     try
                     {
                         Role = await app.GetService<PeopleService>().GetRole(accessToken.User.Id, accessToken.Id);
-                    } catch (Exception)
+                    } catch (Exception e)
                     {
+                        log.Error("Failed to get role", e);
                     }
                     return;
                 }
@@ -174,8 +187,9 @@ namespace SummonEmployeeDashboard.ViewModels
                 app.EventBus.Dispose();
                 Login();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                log.Error("Failed to logout", e);
             }
         }
 
@@ -219,8 +233,9 @@ namespace SummonEmployeeDashboard.ViewModels
             try
             {
                return await app.GetService<PeopleService>().Ping(accessToken);
-            } catch (Exception)
+            } catch (Exception e)
             {
+                log.Error("Ping failed", e);
             }
             return false;
         }

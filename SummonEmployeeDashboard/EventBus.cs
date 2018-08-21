@@ -15,6 +15,7 @@ namespace SummonEmployeeDashboard
 {
     public class EventBus
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EventBus));
         private Subject<SummonRequestUpdate> subject = new Subject<SummonRequestUpdate>();
         // TODO add message bus
         private IObservable<SummonRequestUpdate> eventBus;

@@ -17,6 +17,12 @@ namespace SummonEmployeeDashboard.Rest
             if (response.IsSuccessful)
             {
                 return response.Data;
+            } else if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            } else if (!string.IsNullOrEmpty(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
             }
             else
             {

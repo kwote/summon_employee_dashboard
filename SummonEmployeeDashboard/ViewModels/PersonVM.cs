@@ -16,6 +16,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class PersonVM : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(PersonVM));
         private Person person;
         public Person Person
         {
@@ -87,6 +88,7 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private bool CanSummon()
         {
+            if (!canSummon) return false;
             var accessToken = App.GetApp().AccessToken;
             return accessToken?.UserId != person?.Id;
         }
@@ -104,8 +106,9 @@ namespace SummonEmployeeDashboard.ViewModels
                 };
                 await app.GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                log.Error("Failed to summon person", e);
             }
         }
 

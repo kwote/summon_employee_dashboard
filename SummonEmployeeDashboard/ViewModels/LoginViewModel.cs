@@ -14,6 +14,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class LoginViewModel : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(LoginViewModel));
         private LoginCredentials credentials;
         public LoginCredentials Credentials
         {
@@ -76,13 +77,17 @@ namespace SummonEmployeeDashboard.ViewModels
             return true;
         }
 
+        private bool loggingIn = false;
+
         private async Task Login()
         {
             try
             {
+                loggingIn = true;
                 App app = App.GetApp();
                 app.ServerIP = ServerIP;
                 var accessToken = await app.GetService<PeopleService>().Login(credentials);
+                loggingIn = false;
                 if (accessToken != null)
                 {
                     app.AccessToken = accessToken;
@@ -92,12 +97,15 @@ namespace SummonEmployeeDashboard.ViewModels
                 }
             } catch (Exception e)
             {
-                Error = e.Message;
+                log.Error("Failed to login", e);
+                loggingIn = false;
+                Error = "Не удалось войти";
             }
         }
 
         private void Register()
         {
+            Error = "";
             App app = App.GetApp();
             app.ServerIP = ServerIP;
             var registerWindow = new RegisterWindow();

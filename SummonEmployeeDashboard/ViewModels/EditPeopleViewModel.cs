@@ -14,6 +14,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class EditPeopleViewModel : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EditPeopleViewModel));
         private EditPersonVM selectedPersonVM;
 
         public EditPersonVM SelectedPerson
@@ -58,8 +59,9 @@ namespace SummonEmployeeDashboard.ViewModels
                         Roles = new ObservableCollection<Role>(roles)
                     })
                 );
-            } catch (Exception)
+            } catch (Exception e)
             {
+                log.Error("Failed to list people", e);
             }
         }
 

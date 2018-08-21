@@ -16,6 +16,7 @@ namespace SummonEmployeeDashboard.ViewModels
 {
     class StatisticsViewModel : INotifyPropertyChanged
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(StatisticsViewModel));
         private readonly int personId;
         private StatVM selectedStat;
         public StatVM SelectedStat
@@ -86,8 +87,9 @@ namespace SummonEmployeeDashboard.ViewModels
                 SelectedStat = new StatVM();
                 Stats = new ObservableCollection<StatVM>(stats.ConvertAll(s => new StatVM() { Stat = s }));
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                log.Error("Failed to load statistics", e);
             }
         }
 
