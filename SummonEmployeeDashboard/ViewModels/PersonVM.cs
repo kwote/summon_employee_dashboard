@@ -88,7 +88,6 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private bool CanSummon()
         {
-            if (!canSummon) return false;
             var accessToken = App.GetApp().AccessToken;
             return accessToken?.UserId != person?.Id;
         }

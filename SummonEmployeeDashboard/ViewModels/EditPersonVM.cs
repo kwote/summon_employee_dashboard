@@ -88,6 +88,7 @@ namespace SummonEmployeeDashboard.ViewModels
 
         public async void GetRole()
         {
+            if (person == null) return;
             try
             {
                 App app = App.GetApp();
