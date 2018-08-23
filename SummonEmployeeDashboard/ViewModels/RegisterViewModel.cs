@@ -71,6 +71,35 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
+        private ICommand loginCommand;
+
+        public ICommand LoginCommand
+        {
+            get
+            {
+                if (loginCommand == null)
+                {
+                    loginCommand = new RelayCommand(
+                        param => Login(),
+                        param => CanLogin()
+                    );
+                }
+                return loginCommand;
+            }
+        }
+
+        private void Login()
+        {
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            CloseAction();
+        }
+
+        private bool CanLogin()
+        {
+            return true;
+        }
+
         private bool CanRegister()
         {
             if (!registerPerson.Email.Contains('@'))
@@ -125,9 +154,7 @@ namespace SummonEmployeeDashboard.ViewModels
                     {
                         app.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            var loginWindow = new LoginWindow();
-                            loginWindow.Show();
-                            CloseAction();
+                            Login();
                         }));
                     }
                 }
