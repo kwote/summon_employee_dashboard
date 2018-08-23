@@ -52,6 +52,7 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             registerPerson = new RegisterPerson();
         }
+        private bool isRegistering = false;
 
         private ICommand registerCommand;
 
@@ -111,8 +112,11 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void Register()
         {
+            if (isRegistering) return;
+            Error = "";
             Task.Factory.StartNew(() =>
             {
+                isRegistering = true;
                 App app = App.GetApp();
                 try
                 {
@@ -135,6 +139,7 @@ namespace SummonEmployeeDashboard.ViewModels
                         Error = "Ошибка регистрации";
                     }));
                 }
+                isRegistering = false;
             });
         }
 

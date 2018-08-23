@@ -9,7 +9,7 @@ namespace EventSource4Net
 {
     internal class Watchdog
     {
-        private long _timeout;
+        private readonly long _timeout;
         private Timer _timer;
         public event EventHandler TimerExpired;
 
@@ -26,13 +26,12 @@ namespace EventSource4Net
         private void OnTimerExpired(object State)
         {
             _timer.Change(Timeout.Infinite, Timeout.Infinite);
-            if (TimerExpired != null)
-                TimerExpired(this, new EventArgs());
+            TimerExpired?.Invoke(this, new EventArgs());
         }
 
         public Watchdog(long timeout)
         {
-            if (timeout < 1) throw new ArgumentOutOfRangeException("timeout", "timeout muste be greater than zero.");
+            if (timeout < 1) throw new ArgumentOutOfRangeException("timeout", "timeout must be greater than zero.");
         }
     }
 }

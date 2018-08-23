@@ -9,8 +9,8 @@ namespace EventSource4Net
 {
     class DisconnectedState : IConnectionState 
     {
-        private Uri mUrl;
-        private IWebRequesterFactory mWebRequesterFactory;
+        private readonly Uri mUrl;
+        private readonly IWebRequesterFactory mWebRequesterFactory;
         public EventSourceState State
         {
             get { return EventSourceState.CLOSED; }
@@ -24,10 +24,14 @@ namespace EventSource4Net
 
         public Task<IConnectionState> Run(Action<ServerSentEvent> donothing, CancellationToken cancelToken)
         {
-            if(cancelToken.IsCancellationRequested)
+            if (cancelToken.IsCancellationRequested)
+            {
                 return Task.Factory.StartNew<IConnectionState>(() => { return new DisconnectedState(mUrl, mWebRequesterFactory); });
+            }
             else
+            {
                 return Task.Factory.StartNew<IConnectionState>(() => { return new ConnectingState(mUrl, mWebRequesterFactory); });
+            }
         }
     }
 }

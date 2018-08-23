@@ -87,9 +87,9 @@ namespace SummonEmployeeDashboard.ViewModels
             Error = "";
             Task.Factory.StartNew(() =>
             {
+                loggingIn = true;
                 try
                 {
-                    loggingIn = true;
                     var accessToken = app.GetService<PeopleService>().Login(credentials);
                     if (accessToken != null)
                     {

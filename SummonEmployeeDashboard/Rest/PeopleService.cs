@@ -10,6 +10,7 @@ namespace SummonEmployeeDashboard.Rest
 {
     class PeopleService : RestService
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(PeopleService));
         public PeopleService()
         {
         }
@@ -80,14 +81,19 @@ namespace SummonEmployeeDashboard.Rest
                         request.AddHeader("Authorization", accessToken);
                         var stat = RestCall<Stat>(request);
                         stats.Add(stat);
-                    } catch (Exception)
+                    } catch (Exception e)
                     {
-
+                        log.Error("Failed to load stat", e);
                     }
                 });
             }
             Task.WaitAll(tasks);
-            stats.Sort((s1, s2) => { return s1.Date.Value.CompareTo(s2.Date.Value); });
+            stats.Sort((s1, s2) => {
+                if (s1.Date.HasValue) {
+                    return s2.Date.HasValue ? s1.Date.Value.CompareTo(s2.Date.Value) : 1;
+                }
+                return -1;
+            });
             return stats;
         }
 

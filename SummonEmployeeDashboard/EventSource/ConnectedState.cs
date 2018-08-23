@@ -31,7 +31,15 @@ namespace EventSource4Net
                 var stream = mResponse.GetResponseStream();
                 {
                     byte[] buffer = new byte[1024 * 8];
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    int bytesRead = 0;
+                    try
+                    {
+                        bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Warn("Failed to read from stream", e);
+                    }
                     if (bytesRead > 0) // stream has not reached the end yet
                     {
                         string text = Encoding.UTF8.GetString(buffer, 0, bytesRead);
@@ -64,7 +72,9 @@ namespace EventSource4Net
                                     fieldValue = line.Substring(index + 1).TrimStart();
                                 }
                                 else
+                                {
                                     fieldName = line;
+                                }
 
                                 if (String.Compare(fieldName, "event", true) == 0)
                                 {
@@ -98,7 +108,9 @@ namespace EventSource4Net
                         }
 
                         if (!cancelToken.IsCancellationRequested)
+                        {
                             return this;
+                        }
                     }
                     return new DisconnectedState(mResponse.ResponseUri, mWebRequesterFactory);
                 }

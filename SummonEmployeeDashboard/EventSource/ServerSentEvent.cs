@@ -19,7 +19,9 @@ namespace EventSource4Net
             sb.Append("Data: ").Append(Data).AppendLine();
             sb.Append("LastEventId: ").Append(LastEventId).AppendLine();
             if (Retry.HasValue)
+            {
                 sb.Append("Retry: ").Append(Retry.Value).AppendLine();
+            }
             return sb.ToString();
         }
     }

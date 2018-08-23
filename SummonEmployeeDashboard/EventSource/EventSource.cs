@@ -83,7 +83,9 @@ namespace EventSource4Net
         protected void Run()
         {
             if (mTokenSource.IsCancellationRequested && CurrentState.State == EventSourceState.CLOSED)
+            {
                 return;
+            }
 
             mCurrentState.Run(OnEventReceived, mTokenSource.Token).ContinueWith(cs =>
             {
