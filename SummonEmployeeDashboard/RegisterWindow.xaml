@@ -10,7 +10,11 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="0.15*" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="25" Grid.Row="0" DataContext="{Binding RegisterPerson}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.8*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="25" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding RegisterPerson}">
             <TextBlock Text="Email" />
             <TextBox Text="{Binding Path=Email, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="Пароль" />
@@ -28,6 +32,7 @@
             <TextBlock Text="Телефон" />
             <TextBox Text="{Binding Path=Phone, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
-        <Button Content="Зарегистрировать" Grid.Row="1" Command="{Binding RegisterCommand}" Margin="25,10"/>
+        <Button Content="Зарегистрировать" Grid.Row="1" Command="{Binding RegisterCommand}" Margin="25,10,5,10"/>
+        <Button Content="Вернуться" Grid.Row="1" Grid.Column="1" Command="{Binding LoginCommand}" Margin="5,10,25,10"/>
     </Grid>
 </Window>

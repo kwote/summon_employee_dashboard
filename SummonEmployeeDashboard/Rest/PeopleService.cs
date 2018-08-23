@@ -98,7 +98,7 @@ namespace SummonEmployeeDashboard.Rest
             return stats;
         }
 
-        public async void Logout(string accessToken)
+        public async Task Logout(string accessToken)
         {
             var request = new RestRequest("people/logout")
             {

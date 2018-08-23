@@ -81,6 +81,7 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async Task Login()
         {
+            if (loggingIn) return;
             loggingIn = true;
             try
             {

@@ -48,7 +48,15 @@ namespace SummonEmployeeDashboard
             // Subscribe the observable to the task on execution.
             observable.Subscribe(async x => {
                 var accessToken = App.GetApp().AccessToken;
-                var valid = await App.GetApp().GetService<PeopleService>().Ping(accessToken.Id);
+                var valid = false;
+                try
+                {
+                    valid = await App.GetApp().GetService<PeopleService>().Ping(accessToken.Id);
+                } catch (Exception e)
+                {
+                    log.Error("Ping failed", e);
+                    valid = false;
+                }
                 if (valid && !connected)
                 {
                     await OpenConnection(accessToken);
