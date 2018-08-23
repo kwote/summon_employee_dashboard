@@ -81,11 +81,12 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async Task Login()
         {
+            loggingIn = true;
             try
             {
-                loggingIn = true;
                 App app = App.GetApp();
                 app.ServerIP = ServerIP;
+                Error = "";
                 var accessToken = await app.GetService<PeopleService>().Login(credentials);
                 loggingIn = false;
                 if (accessToken != null)
@@ -98,9 +99,9 @@ namespace SummonEmployeeDashboard.ViewModels
             } catch (Exception e)
             {
                 log.Error("Failed to login", e);
-                loggingIn = false;
                 Error = "Не удалось войти";
             }
+            loggingIn = false;
         }
 
         private void Register()

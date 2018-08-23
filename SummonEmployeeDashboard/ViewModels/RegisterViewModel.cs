@@ -52,6 +52,7 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             registerPerson = new RegisterPerson();
         }
+        private bool isRegistering = false;
 
         private ICommand registerCommand;
 
@@ -111,6 +112,8 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async Task RegisterAsync()
         {
+            if (isRegistering) return;
+            Error = "";
             try
             {
                 var person = await App.GetApp().GetService<PeopleService>().Register(registerPerson);
@@ -125,6 +128,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 log.Error("Failed to register " + registerPerson.ToString(), e);
                 Error = "Ошибка регистрации";
             }
+            isRegistering = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
