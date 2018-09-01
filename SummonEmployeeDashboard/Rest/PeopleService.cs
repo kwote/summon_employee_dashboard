@@ -74,7 +74,7 @@ namespace SummonEmployeeDashboard.Rest
             request.AddQueryParameter("from", Utils.GetStringTime(from));
             request.AddQueryParameter("to", Utils.GetStringTime(to));
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<PersonStat>>(request);
+            return RestCall<List<PersonStat>>(request);
         }
 
         public void Logout(string accessToken)

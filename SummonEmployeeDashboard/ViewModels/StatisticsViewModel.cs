@@ -156,7 +156,7 @@ namespace SummonEmployeeDashboard.ViewModels
                     var accessToken = app.AccessToken;
                     var from = dateFrom.Date;
                     var to = dateTo.Date;
-                    var stats = await app.GetService<PeopleService>().GetStatistics(personId, requestType, from, to, accessToken.Id);
+                    var stats = app.GetService<PeopleService>().GetStatistics(personId, requestType, from, to, accessToken.Id);
 
                     app.Dispatcher.BeginInvoke(new Action(() =>
                     {
