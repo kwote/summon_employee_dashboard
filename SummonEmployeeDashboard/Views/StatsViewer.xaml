@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SummonEmployeeDashboard"
              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Visibility="{Binding Path=SelfVisibility}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*" />
             <RowDefinition Height="0.1*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -17,8 +16,8 @@
             <DatePicker SelectedDate="{Binding DateFrom}"/>
             <Label>По: </Label>
             <DatePicker SelectedDate="{Binding DateTo}"/>
-            <ComboBox ItemsSource="{Binding Path=RequestTypes, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding Path=RequestType, UpdateSourceTrigger=PropertyChanged}"
+            <ComboBox ItemsSource="{Binding Path=RequestTypes}"
+                      SelectedItem="{Binding Path=SelectedRequestType}"
                         IsSynchronizedWithCurrentItem="True">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -29,47 +28,8 @@
             <Button Command="{Binding Path=ReloadCommand}">Перегрузить</Button>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Visibility="{Binding HeaderVisible}">
-            <TextBlock Text="Статистика" Width="200"/>
-
-            <ListBox ItemsSource="{Binding Days}" SelectedItem="{Binding SelectedDay}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Margin="5" Width="100" Text="{Binding}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
-
-        <ListBox Grid.Row="2" ItemsSource="{Binding Stats}" SelectedItem="{Binding SelectedStat}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=PersonName}" Width="200"/>
-                        <ListBox ItemsSource="{Binding DayStats}" SelectedItem="{Binding SelectedDayStat}">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="5" Width="100">
-                                        <TextBlock Text="{Binding Path=Accepted}" />
-                                        <TextBlock Text="{Binding Path=Rejected}" />
-                                        <TextBlock Text="{Binding Path=Pending}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Stats}"
+          local:DataGridColumnsBehavior.BindableColumns="{Binding Columns}"
+          AutoGenerateColumns="False" EnableRowVirtualization="False"/>
     </Grid>
 </UserControl>

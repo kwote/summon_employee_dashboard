@@ -77,6 +77,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="EventBus.cs" />
+    <Compile Include="Helper\CustomBoundColumn.cs" />
+    <Compile Include="Helper\DataGridColumnsBehavior.cs" />
     <Compile Include="Models\DayStat.cs" />
     <Compile Include="Models\PersonName.cs" />
     <Compile Include="Models\PersonStat.cs" />
@@ -141,7 +143,7 @@
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="Helper\RelayCommand.cs" />
     <Page Include="RegisterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

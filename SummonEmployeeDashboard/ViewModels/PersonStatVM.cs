@@ -17,22 +17,8 @@ namespace SummonEmployeeDashboard.ViewModels
     class PersonStatVM : INotifyPropertyChanged
     {
         private readonly PersonStat stat;
-        private DayStatVM selectedDayStat;
-        public DayStatVM SelectedDayStat
-        {
-            get => selectedDayStat;
-            set
-            {
-                selectedDayStat = value;
-                OnPropertyChanged("SelectedDayStat");
-            }
-        }
-
         private ObservableCollection<DayStatVM> dayStats;
-        public ObservableCollection<DayStatVM> DayStats
-        {
-            get => dayStats;
-            set
+        public ObservableCollection<DayStatVM> DayStats { get => dayStats; set
             {
                 dayStats = value;
                 OnPropertyChanged("DayStats");
@@ -57,7 +43,7 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void Initialize(DateTime from, DateTime to)
         {
-            List<DayStatVM> dayStats = new List<DayStatVM>();
+            var dayStats = new List<DayStatVM>();
             DateTime date = from;
             var enumerator = stat.Stats.GetEnumerator();
             while (enumerator.MoveNext())
@@ -66,6 +52,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 var day = dayStat.Date?.Date;
                 while (date < day)
                 {
+                    dayStats.Add(new DayStatVM(new DayStat() { Date = date }));
                     date = date.AddDays(1);
                 }
                 dayStats.Add(new DayStatVM(dayStat));
