@@ -4,11 +4,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 namespace SummonEmployeeDashboard.Models
 {
-    class Stat : INotifyPropertyChanged
+    class DayStat : INotifyPropertyChanged
     {
         private DateTime? date = null;
-        private int incoming;
-        private int outgoing;
         private int accepted;
         private int rejected;
         private int pending;
@@ -19,24 +17,6 @@ namespace SummonEmployeeDashboard.Models
             {
                 date = value;
                 OnPropertyChanged("Date");
-            }
-        }
-
-        public int Incoming
-        {
-            get => incoming; set
-            {
-                incoming = value;
-                OnPropertyChanged("Incoming");
-            }
-        }
-
-        public int Outgoing
-        {
-            get => outgoing; set
-            {
-                outgoing = value;
-                OnPropertyChanged("Outgoing");
             }
         }
 

@@ -7,30 +7,69 @@
              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
             <RowDefinition Height="0.1*" />
+            <RowDefinition Height="0.1*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ListBox ItemsSource="{Binding Stats}"
-                     SelectedItem="{Binding SelectedStat}">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
+        <StackPanel Grid.Column="0" Orientation="Horizontal" >
+            <Label>C:</Label>
+            <DatePicker SelectedDate="{Binding DateFrom}"/>
+            <Label>По: </Label>
+            <DatePicker SelectedDate="{Binding DateTo}"/>
+            <ComboBox ItemsSource="{Binding Path=RequestTypes, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding Path=RequestType, UpdateSourceTrigger=PropertyChanged}"
+                        IsSynchronizedWithCurrentItem="True">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Command="{Binding Path=ReloadCommand}">Перегрузить</Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Visibility="{Binding HeaderVisible}">
+            <TextBlock Text="Статистика" Width="200"/>
+
+            <ListBox ItemsSource="{Binding Days}" SelectedItem="{Binding SelectedDay}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="5" Width="100" Text="{Binding}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <ListBox Grid.Row="2" ItemsSource="{Binding Stats}" SelectedItem="{Binding SelectedStat}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock Text="{Binding Path=Date}" />
-                        <TextBlock Text="{Binding Path=Incoming}" />
-                        <TextBlock Text="{Binding Path=Outgoing}" />
-                        <TextBlock Text="{Binding Path=Accepted}" />
-                        <TextBlock Text="{Binding Path=Rejected}" />
-                        <TextBlock Text="{Binding Path=Pending}" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=PersonName}" Width="200"/>
+                        <ListBox ItemsSource="{Binding DayStats}" SelectedItem="{Binding SelectedDayStat}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="5" Width="100">
+                                        <TextBlock Text="{Binding Path=Accepted}" />
+                                        <TextBlock Text="{Binding Path=Rejected}" />
+                                        <TextBlock Text="{Binding Path=Pending}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Grid.Row="1" Command="{Binding Path=ReloadCommand}">Перегрузить</Button>
     </Grid>
 </UserControl>

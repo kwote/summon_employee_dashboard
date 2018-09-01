@@ -142,6 +142,7 @@ namespace SummonEmployeeDashboard.ViewModels
         private async Task RegisterAsync()
         {
             if (isRegistering) return;
+            isRegistering = true;
             Error = "";
             try
             {

@@ -14,17 +14,15 @@ using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class StatVM : INotifyPropertyChanged
+    class DayStatVM : INotifyPropertyChanged
     {
-        private Stat stat;
-        public Stat Stat
+        private DayStat stat;
+
+        public DayStatVM(DayStat stat)
         {
-            get { return stat; }
-            set
-            {
-                stat = value;
-                OnPropertyChanged("Stat");
-            }
+            this.stat = stat;
+            
+            Initialize();
         }
 
         public string Date
@@ -35,22 +33,6 @@ namespace SummonEmployeeDashboard.ViewModels
             }
         }
 
-        public string Incoming
-        {
-            get
-            {
-                return "Входящие: " + Stat.Incoming;
-            }
-        }
-
-        public string Outgoing
-        {
-            get
-            {
-                return "Исходящие: " + Stat.Outgoing;
-            }
-        }
-
         public string Accepted
         {
             get
@@ -58,7 +40,7 @@ namespace SummonEmployeeDashboard.ViewModels
                 return "Принятые: " + Stat.Accepted;
             }
         }
-
+        
         public string Rejected
         {
             get
@@ -80,9 +62,12 @@ namespace SummonEmployeeDashboard.ViewModels
             get { return stat != null ? Visibility.Visible : Visibility.Hidden; }
         }
 
-        public StatVM()
-        {
-            Initialize();
+        internal DayStat Stat { get => stat;
+            set
+            {
+                stat = value;
+                OnPropertyChanged("Stat");
+            }
         }
 
         private void Initialize()

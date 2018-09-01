@@ -228,7 +228,7 @@ namespace SummonEmployeeDashboard.ViewModels
             PeopleStatsVM = new PeopleStatsViewModel();
         }
 
-        private async Task<Boolean> Ping(string accessToken, App app)
+        private async Task<bool> Ping(string accessToken, App app)
         {
             try
             {
