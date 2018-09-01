@@ -143,13 +143,13 @@ namespace SummonEmployeeDashboard.ViewModels
                     {
                         Stats = new ObservableCollection<PersonStatVM>(stats.ConvertAll(s => new PersonStatVM(s, from, to)));
                         var date = from;
-                        var days = new List<string>();
+                        var days = new List<DateTime>();
                         while (date <= to)
                         {
-                            days.Add(date.ToShortDateString());
+                            days.Add(date);
                             date = date.AddDays(1);
                         }
-                        Days = new ObservableCollection<string>(days);
+                        Columns = BuildColumns(days);
                     }));
                 }
                 catch (Exception e)
