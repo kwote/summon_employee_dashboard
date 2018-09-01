@@ -6,6 +6,15 @@
         xmlns:local="clr-namespace:SummonEmployeeDashboard"
         mc:Ignorable="d"
         Title="Вызов сотрудника" Height="450" Width="800" Closed="Window_Closed">
+    <Window.Resources>
+        <DataTemplate x:Key="StatTemplate">
+            <StackPanel Margin="5">
+                <TextBlock Text="{Binding Path=Accepted}" />
+                <TextBlock Text="{Binding Path=Rejected}" />
+                <TextBlock Text="{Binding Path=Pending}" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <TabControl x:Name="main" IsEnabled="{Binding Active}">
         <TabItem x:Name="peopleTab">
             <TabItem.Header>
