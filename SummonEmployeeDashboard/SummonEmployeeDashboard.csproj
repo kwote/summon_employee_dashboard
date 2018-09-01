@@ -87,7 +87,10 @@
     <Compile Include="EventSource\WatchDog.cs" />
     <Compile Include="EventSource\WebRequester.cs" />
     <Compile Include="EventSource\WebRequesterFactory.cs" />
-    <Compile Include="Models\Stat.cs" />
+    <Compile Include="Models\DayStat.cs" />
+    <Compile Include="Models\PersonName.cs" />
+    <Compile Include="Models\PersonStat.cs" />
+    <Compile Include="Models\RequestType.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\RegisterPerson.cs" />
@@ -110,8 +113,9 @@
     <Compile Include="ViewModels\PeopleStatsViewModel.cs" />
     <Compile Include="ViewModels\EditPersonVM.cs" />
     <Compile Include="ViewModels\EditPeopleViewModel.cs" />
+    <Compile Include="ViewModels\DayStatVM.cs" />
     <Compile Include="ViewModels\PersonWithStatsVM.cs" />
-    <Compile Include="ViewModels\StatVM.cs" />
+    <Compile Include="ViewModels\PersonStatVM.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\SummonRequestVM.cs" />
     <Compile Include="ViewModels\PersonVM.cs" />

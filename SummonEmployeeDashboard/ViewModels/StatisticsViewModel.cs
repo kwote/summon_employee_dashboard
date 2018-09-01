@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
@@ -18,8 +19,9 @@ namespace SummonEmployeeDashboard.ViewModels
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(StatisticsViewModel));
         private readonly int personId;
-        private StatVM selectedStat;
-        public StatVM SelectedStat
+
+        private PersonStatVM selectedStat;
+        public PersonStatVM SelectedStat
         {
             get { return selectedStat; }
             set
@@ -28,16 +30,79 @@ namespace SummonEmployeeDashboard.ViewModels
                 OnPropertyChanged("SelectedStat");
             }
         }
-
-        private ObservableCollection<StatVM> stats;
-        public ObservableCollection<StatVM> Stats
+        private ObservableCollection<PersonStatVM> stats;
+        public ObservableCollection<PersonStatVM> Stats
         {
-            get {
-                return stats;
-            }
+            get => stats;
             set {
                 stats = value;
                 OnPropertyChanged("Stats");
+            }
+        }
+        private DateTime dateFrom;
+        public DateTime DateFrom
+        {
+            get => dateFrom;
+            set
+            {
+                dateFrom = value;
+                OnPropertyChanged("DateFrom");
+            }
+        }
+        private DateTime dateTo;
+        public DateTime DateTo
+        {
+            get => dateTo;
+            set
+            {
+                dateTo = value;
+                OnPropertyChanged("DateTo");
+            }
+        }
+        private ObservableCollection<RequestType> requestTypes;
+        public ObservableCollection<RequestType> RequestTypes
+        {
+            get => requestTypes;
+            set
+            {
+                requestTypes = value;
+                OnPropertyChanged("RequestTypes");
+            }
+        }
+        private RequestType requestType;
+        public RequestType RequestType
+        {
+            get => requestType;
+            set
+            {
+                requestType = value;
+                OnPropertyChanged("RequestType");
+            }
+        }
+        public Visibility HeaderVisible
+        {
+            get { return days.Count > 0 ? Visibility.Visible : Visibility.Collapsed; }
+        }
+        private string selectedDay;
+        public string SelectedDay
+        {
+            get => selectedDay;
+            set
+            {
+                selectedDay = value;
+                OnPropertyChanged("SelectedDay");
+            }
+        }
+
+        private ObservableCollection<string> days;
+        public ObservableCollection<string> Days
+        {
+            get => days;
+            set
+            {
+                days = value;
+                OnPropertyChanged("Days");
+                OnPropertyChanged("HeaderVisible");
             }
         }
 
@@ -69,6 +134,10 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             syncContext = SynchronizationContext.Current;
             this.personId = personId;
+            dateFrom = DateTime.Now.AddDays(-7);
+            dateTo = DateTime.Now;
+            requestTypes = new ObservableCollection<RequestType>(RequestType.Types());
+            requestType = RequestType.Incoming();
             Initialize();
         }
 
@@ -84,12 +153,22 @@ namespace SummonEmployeeDashboard.ViewModels
                 try
                 {
                     App app = App.GetApp();
-                    AccessToken accessToken = app.AccessToken;
-                    var stats = app.GetService<PeopleService>().GetStatistics(personId, accessToken.Id);
+                    var accessToken = app.AccessToken;
+                    var from = dateFrom.Date;
+                    var to = dateTo.Date;
+                    var stats = await app.GetService<PeopleService>().GetStatistics(personId, requestType, from, to, accessToken.Id);
+
                     app.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        SelectedStat = new StatVM();
-                        Stats = new ObservableCollection<StatVM>(stats.ConvertAll(s => new StatVM() { Stat = s }));
+                        Stats = new ObservableCollection<PersonStatVM>(stats.ConvertAll(s => new PersonStatVM(s, from, to)));
+                        var date = from;
+                        var days = new List<string>();
+                        while (date <= to)
+                        {
+                            days.Add(date.ToShortDateString());
+                            date = date.AddDays(1);
+                        }
+                        Days = new ObservableCollection<string>(days);
                     }));
                 }
                 catch (Exception e)

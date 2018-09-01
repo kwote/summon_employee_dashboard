@@ -65,36 +65,16 @@ namespace SummonEmployeeDashboard.Rest
             return RestCall<AccessToken>(request);
         }
 
-        public List<Stat> GetStatistics(int userId, string accessToken)
+        public List<PersonStat> GetStatistics(int userId, RequestType requestType, DateTime from, DateTime to, string accessToken)
         {
-            List<Stat> stats = new List<Stat>();
-            Task[] tasks = new Task[7];
-            for (int i = 0; i < 7; ++i)
-            {
-                var date = DateTime.Now.AddDays(-i);
-                tasks[i] = Task.Factory.StartNew(() => {
-                    try
-                    {
-                        var request = new RestRequest("people/statistics");
-                        request.AddQueryParameter("personId", userId.ToString());
-                        request.AddQueryParameter("date", Utils.GetStringTime(date));
-                        request.AddHeader("Authorization", accessToken);
-                        var stat = RestCall<Stat>(request);
-                        stats.Add(stat);
-                    } catch (Exception e)
-                    {
-                        log.Error("Failed to load stat", e);
-                    }
-                });
-            }
-            Task.WaitAll(tasks);
-            stats.Sort((s1, s2) => {
-                if (s1.Date.HasValue) {
-                    return s2.Date.HasValue ? s1.Date.Value.CompareTo(s2.Date.Value) : 1;
-                }
-                return -1;
-            });
-            return stats;
+            var request = new RestRequest("people/statistics");
+            request.AddQueryParameter("personId", userId.ToString());
+            var incoming = requestType.Id == RequestType.RequestTypeEnum.Incoming;
+            request.AddQueryParameter("incoming", incoming.ToString());
+            request.AddQueryParameter("from", Utils.GetStringTime(from));
+            request.AddQueryParameter("to", Utils.GetStringTime(to));
+            request.AddHeader("Authorization", accessToken);
+            return await RestCall<List<PersonStat>>(request);
         }
 
         public void Logout(string accessToken)

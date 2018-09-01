@@ -142,6 +142,7 @@ namespace SummonEmployeeDashboard.ViewModels
         private void Register()
         {
             if (isRegistering) return;
+            isRegistering = true;
             Error = "";
             Task.Factory.StartNew(() =>
             {
