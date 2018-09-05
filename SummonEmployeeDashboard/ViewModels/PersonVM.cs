@@ -59,8 +59,18 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             get
             {
-                var date = person?.LastActiveTime?.AddSeconds(EventBus.PING_PERIOD);
-                return date?.CompareTo(DateTime.Now) > 0 ? "Онлайн" : "Оффлайн";
+                var inactive = (person as SummonPerson)?.Inactive;
+                if (inactive.HasValue)
+                {
+                    if (inactive / 1000 <= EventBus.PING_PERIOD)
+                    {
+                        return "Онлайн";
+                    } else
+                    {
+                        return Utils.ToRelativeDateString(inactive.Value, true);
+                    }
+                }
+                return "Оффлайн";
             }
         }
 

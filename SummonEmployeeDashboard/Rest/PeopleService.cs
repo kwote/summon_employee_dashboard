@@ -22,11 +22,11 @@ namespace SummonEmployeeDashboard.Rest
             return RestCall<List<Person>>(request);
         }
 
-        public List<Person> ListSummonPeople(string accessToken)
+        public List<SummonPerson> ListSummonPeople(string accessToken)
         {
             var request = new RestRequest("people/summon");
             request.AddHeader("Authorization", accessToken);
-            return RestCall<List<Person>>(request);
+            return RestCall<List<SummonPerson>>(request);
         }
 
         public List<Role> ListRoles()
@@ -43,14 +43,6 @@ namespace SummonEmployeeDashboard.Rest
             request.AddQueryParameter("userId", personId.ToString());
             request.AddHeader("Authorization", accessToken);
             return RestCall<Role>(request);
-        }
-
-        public Person GetPerson(int personId, string accessToken)
-        {
-            var request = new RestRequest("people/{id}");
-            request.AddUrlSegment("id", personId.ToString());
-            request.AddHeader("Authorization", accessToken);
-            return RestCall<Person>(request);
         }
 
         public AccessToken Login(LoginCredentials credentials)
@@ -71,8 +63,8 @@ namespace SummonEmployeeDashboard.Rest
             request.AddQueryParameter("personId", userId.ToString());
             var incoming = requestType.Id == RequestType.RequestTypeEnum.Incoming;
             request.AddQueryParameter("incoming", incoming.ToString());
-            request.AddQueryParameter("from", Utils.GetStringTime(from));
-            request.AddQueryParameter("to", Utils.GetStringTime(to));
+            request.AddQueryParameter("from", from.GetStringTime());
+            request.AddQueryParameter("to", to.GetStringTime());
             request.AddHeader("Authorization", accessToken);
             return RestCall<List<PersonStat>>(request);
         }
@@ -132,7 +124,7 @@ namespace SummonEmployeeDashboard.Rest
                 {
                     ["requested"] = new Dictionary<string, object>()
                     {
-                        ["gt"] = Utils.GetStringTime(date)
+                        ["gt"] = date.GetStringTime()
                     }
                 },
                 ["include"] = "caller",
@@ -155,7 +147,7 @@ namespace SummonEmployeeDashboard.Rest
                 {
                     ["requested"] = new Dictionary<string, object>()
                     {
-                        ["gt"] = Utils.GetStringTime(date)
+                        ["gt"] = date.GetStringTime()
                     }
                 },
                 ["include"] = "target",
