@@ -22,11 +22,11 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<List<Person>>(request);
         }
 
-        public async Task<List<Person>> ListSummonPeople(string accessToken)
+        public async Task<List<SummonPerson>> ListSummonPeople(string accessToken)
         {
             var request = new RestRequest("people/summon");
             request.AddHeader("Authorization", accessToken);
-            return await RestCall<List<Person>>(request);
+            return await RestCall<List<SummonPerson>>(request);
         }
 
         public async Task<List<Role>> ListRoles()
@@ -43,14 +43,6 @@ namespace SummonEmployeeDashboard.Rest
             request.AddQueryParameter("userId", personId.ToString());
             request.AddHeader("Authorization", accessToken);
             return await RestCall<Role>(request);
-        }
-
-        public async Task<Person> GetPerson(int personId, string accessToken)
-        {
-            var request = new RestRequest("people/{id}");
-            request.AddUrlSegment("id", personId);
-            request.AddHeader("Authorization", accessToken);
-            return await RestCall<Person>(request);
         }
 
         public async Task<AccessToken> Login(LoginCredentials credentials)
@@ -71,8 +63,8 @@ namespace SummonEmployeeDashboard.Rest
             request.AddQueryParameter("personId", userId.ToString());
             var incoming = requestType.Id == RequestType.RequestTypeEnum.Incoming;
             request.AddQueryParameter("incoming", incoming.ToString());
-            request.AddQueryParameter("from", Utils.GetStringTime(from));
-            request.AddQueryParameter("to", Utils.GetStringTime(to));
+            request.AddQueryParameter("from", from.GetStringTime());
+            request.AddQueryParameter("to", to.GetStringTime());
             request.AddHeader("Authorization", accessToken);
             return await RestCall<List<PersonStat>>(request);
         }
@@ -88,7 +80,7 @@ namespace SummonEmployeeDashboard.Rest
             await RestCall(request);
         }
 
-        public async Task<Boolean> Ping(string accessToken)
+        public async Task<bool> Ping(string accessToken)
         {
             var request = new RestRequest("people/ping")
             {
@@ -98,7 +90,7 @@ namespace SummonEmployeeDashboard.Rest
             return await RestCall<Boolean>(request);
         }
 
-        public async Task<Boolean> ChooseRole(int personId, string role, string accessToken)
+        public async Task<bool> ChooseRole(int personId, string role, string accessToken)
         {
             var request = new RestRequest("people/chooseRole")
             {
@@ -132,7 +124,7 @@ namespace SummonEmployeeDashboard.Rest
                 {
                     ["requested"] = new Dictionary<string, object>()
                     {
-                        ["gt"] = Utils.GetStringTime(date)
+                        ["gt"] = date.GetStringTime()
                     }
                 },
                 ["include"] = "caller",
@@ -155,7 +147,7 @@ namespace SummonEmployeeDashboard.Rest
                 {
                     ["requested"] = new Dictionary<string, object>()
                     {
-                        ["gt"] = Utils.GetStringTime(date)
+                        ["gt"] = date.GetStringTime()
                     }
                 },
                 ["include"] = "target",
