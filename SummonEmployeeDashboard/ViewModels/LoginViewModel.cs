@@ -57,7 +57,7 @@ namespace SummonEmployeeDashboard.ViewModels
         private void Initialize()
         {
             credentials = new LoginCredentials();
-            ServerIP = App.GetApp().ServerIP;
+            ServerURL = App.GetApp().ServerURL;
         }
 
         public ICommand LoginCommand { get; }
@@ -83,7 +83,7 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             if (loggingIn) return;
             App app = App.GetApp();
-            app.ServerIP = ServerIP;
+            app.ServerURL = ServerURL;
             Error = "";
             Task.Factory.StartNew(() =>
             {
@@ -117,23 +117,23 @@ namespace SummonEmployeeDashboard.ViewModels
         {
             Error = "";
             App app = App.GetApp();
-            app.ServerIP = ServerIP;
+            app.ServerURL = ServerURL;
             var registerWindow = new RegisterWindow();
             registerWindow.Show();
             CloseAction();
         }
 
-        private string serverIP = "";
-        public string ServerIP
+        private string serverURL = "";
+        public string ServerURL
         {
             get
             {
-                return serverIP;
+                return serverURL;
             }
             set
             {
-                serverIP = value;
-                OnPropertyChanged("ServerIP");
+                serverURL = value;
+                OnPropertyChanged("ServerURL");
             }
         }
 

@@ -35,22 +35,22 @@ namespace SummonEmployeeDashboard
             base.OnStartup(e);
         }
 
-        private string serverIP = null;
-        public string ServerIP
+        private string serverURL = null;
+        public string ServerURL
         {
             get
             {
-                if (serverIP == null)
+                if (serverURL == null)
                 {
-                    serverIP = ReadServerIP();
+                    serverURL = ReadServerURL();
                 }
-                return serverIP;
+                return serverURL;
             }
             set
             {
-                serverIP = value;
+                serverURL = value.Trim();
                 client = new RestClient(URL);
-                SaveServerIP(serverIP);
+                SaveServerURL(serverURL);
             }
         }
 
@@ -60,7 +60,7 @@ namespace SummonEmployeeDashboard
             {
                 const string localhost = "http://localhost:3000";
 
-                return (string.IsNullOrWhiteSpace(ServerIP) ? localhost : ServerIP) + "/api/";
+                return (string.IsNullOrWhiteSpace(ServerURL) ? localhost : ServerURL) + "/api/";
             }
         }
         private IRestClient client = null;
@@ -100,13 +100,13 @@ namespace SummonEmployeeDashboard
             SummonEmployeeDashboard.Properties.Settings.Default.Save();
         }
 
-        private string ReadServerIP()
+        private string ReadServerURL()
         {
             var serverIP = SummonEmployeeDashboard.Properties.Settings.Default.ServerIP;
             return serverIP;
         }
 
-        private void SaveServerIP(string serverIP)
+        private void SaveServerURL(string serverIP)
         {
             SummonEmployeeDashboard.Properties.Settings.Default.ServerIP = serverIP;
             SummonEmployeeDashboard.Properties.Settings.Default.Save();

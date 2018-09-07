@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <StackPanel Margin="25,25,25,0" Grid.Row="0">
             <TextBlock Text="URL сервера" />
-            <TextBox Name="serverIPBox" Text="{Binding ServerIP}"/>
+            <TextBox Name="serverURLBox" Text="{Binding ServerURL}"/>
         </StackPanel>
         <StackPanel Margin="25,0,25,0" Grid.Row="1" DataContext="{Binding Credentials}">
             <TextBlock Text="Email" />
