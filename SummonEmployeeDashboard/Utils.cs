@@ -43,9 +43,20 @@ namespace SummonEmployeeDashboard
 
             if (days > 0)
             {
-                sb.AppendFormat("{0} {1}", days,
-                  days == 1 ? "день" : days < 5 ? "дня" : "дней");
-                if (approximate) return sb.ToString() + suffix;
+                if (days == 1 && approximate)
+                {
+                    return milliseconds < 0 ? "завтра" : "вчера";
+                }
+                else if (days == 2 && approximate)
+                {
+                    return milliseconds < 0 ? "послезавтра" : "позавчера";
+                }
+                else
+                {
+                    sb.AppendFormat("{0} {1}", days,
+                      days == 1 ? "день" : days < 5 ? "дня" : "дней");
+                    if (approximate) return sb.ToString() + suffix;
+                }
             }
             int hours = timeSpan.Hours;
             if (hours > 0)
