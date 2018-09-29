@@ -92,6 +92,9 @@ namespace SummonEmployeeDashboard
             SchedulePing();
         }
 
+        private int pingCounter = 0;
+        private const int RECONNECT_PINGS = 10;
+
         private void SchedulePing()
         {
             pingTimer?.Dispose();
@@ -102,6 +105,14 @@ namespace SummonEmployeeDashboard
                 {
                     App app = App.GetApp();
                     var accessToken = app.AccessToken;
+                    pingCounter++;
+                    if (pingCounter == RECONNECT_PINGS)
+                    {
+                        pingCounter = 0;
+                        CloseConnection();
+                        OpenConnection(accessToken);
+                        return;
+                    }
                     var valid = Ping(accessToken.Id, app);
                     if (valid && !connected)
                     {

@@ -57,7 +57,13 @@ namespace SummonEmployeeDashboard.ViewModels
         private void Initialize()
         {
             credentials = new LoginCredentials();
-            ServerURL = App.GetApp().ServerURL;
+            App app = App.GetApp();
+            ServerURL = app.ServerURL;
+            var login = app.Login;
+            if (!string.IsNullOrEmpty(login))
+            {
+                credentials.Email = login;
+            }
         }
 
         public ICommand LoginCommand { get; }
@@ -84,6 +90,7 @@ namespace SummonEmployeeDashboard.ViewModels
             if (loggingIn) return;
             App app = App.GetApp();
             app.ServerURL = ServerURL;
+            app.Login = credentials.Email;
             Error = "";
             Task.Factory.StartNew(() =>
             {
