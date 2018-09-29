@@ -54,6 +54,18 @@ namespace SummonEmployeeDashboard
             }
         }
 
+        private string ReadServerURL()
+        {
+            var serverIP = SummonEmployeeDashboard.Properties.Settings.Default.ServerURL;
+            return serverIP;
+        }
+
+        private void SaveServerURL(string serverURL)
+        {
+            SummonEmployeeDashboard.Properties.Settings.Default.ServerURL = serverURL;
+            SummonEmployeeDashboard.Properties.Settings.Default.Save();
+        }
+
         public string URL
         {
             get
@@ -100,15 +112,32 @@ namespace SummonEmployeeDashboard
             SummonEmployeeDashboard.Properties.Settings.Default.Save();
         }
 
-        private string ReadServerURL()
+        private string login = null;
+        internal string Login
         {
-            var serverIP = SummonEmployeeDashboard.Properties.Settings.Default.ServerIP;
-            return serverIP;
+            get
+            {
+                if (login == null)
+                {
+                    login = ReadLogin();
+                }
+                return login;
+            }
+            set
+            {
+                login = value;
+                SaveLogin(login);
+            }
         }
 
-        private void SaveServerURL(string serverIP)
+        private string ReadLogin()
         {
-            SummonEmployeeDashboard.Properties.Settings.Default.ServerIP = serverIP;
+            return SummonEmployeeDashboard.Properties.Settings.Default.Login;
+        }
+
+        private void SaveLogin(string login)
+        {
+            SummonEmployeeDashboard.Properties.Settings.Default.Login = login;
             SummonEmployeeDashboard.Properties.Settings.Default.Save();
         }
 
@@ -123,7 +152,7 @@ namespace SummonEmployeeDashboard
 
         public static App GetApp()
         {
-            return (App)App.Current;
+            return (App)Current;
         }
     }
 }

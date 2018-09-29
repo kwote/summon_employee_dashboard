@@ -39,6 +39,9 @@ namespace SummonEmployeeDashboard
             SchedulePing();
         }
 
+        private int pingCounter = 0;
+        private const int RECONNECT_PINGS = 10;
+
         private void SchedulePing()
         {
             pingToken.Cancel();
@@ -48,6 +51,14 @@ namespace SummonEmployeeDashboard
             // Subscribe the observable to the task on execution.
             observable.Subscribe(async x => {
                 var accessToken = App.GetApp().AccessToken;
+                pingCounter++;
+                if (pingCounter == RECONNECT_PINGS)
+                {
+                    pingCounter = 0;
+                    CloseConnection();
+                    await OpenConnection(accessToken);
+                    return;
+                }
                 var valid = false;
                 try
                 {
