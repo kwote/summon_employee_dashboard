@@ -93,7 +93,7 @@ namespace SummonEmployeeDashboard
         }
 
         private int pingCounter = 0;
-        private const int RECONNECT_PINGS = 10;
+        private const int RECONNECT_PINGS = 5;
 
         private void SchedulePing()
         {
