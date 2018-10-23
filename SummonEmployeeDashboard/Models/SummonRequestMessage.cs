@@ -42,6 +42,7 @@ namespace SummonEmployeeDashboard.Models
                 Enabled = Data.Enabled,
                 CallerId = Data.CallerId,
                 TargetId = Data.TargetId,
+                Comment = Data.Comment,
                 Caller = Caller,
                 Target = Callee
             };

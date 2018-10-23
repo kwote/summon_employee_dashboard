@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SummonEmployeeDashboard.Models;
 using SummonEmployeeDashboard.Rest;
+using SummonEmployeeDashboard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,8 @@ namespace SummonEmployeeDashboard
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EventBus));
         private Subject<SummonRequestUpdate> subject = new Subject<SummonRequestUpdate>();
+        private Subject<string> messageBus = new Subject<string>();
         // TODO add message bus
-        private IObservable<SummonRequestUpdate> eventBus;
         private EventSourceReader evt;
         private bool connected = false;
 
@@ -26,7 +27,6 @@ namespace SummonEmployeeDashboard
 
         public EventBus()
         {
-            eventBus = subject.AsObservable();
         }
 
         private const string Format = "{{\"where\":{{\"or\":[{{\"targetId\":{0}}},{{\"callerId\":{1}}}]}}}}";
@@ -41,6 +41,7 @@ namespace SummonEmployeeDashboard
 
         private int pingCounter = 0;
         private const int RECONNECT_PINGS = 10;
+        public const string DISCONNECTED = "disconnected";
 
         private void SchedulePing()
         {
@@ -71,13 +72,10 @@ namespace SummonEmployeeDashboard
                 if (valid && !connected)
                 {
                     await OpenConnection(accessToken);
-                } else if (!valid && connected)
+                } else if (!valid)
                 {
                     CloseConnection();
-                    /*syncContext.Post(o =>
-                    {
-                        Login();
-                    }, null);*/
+                    messageBus.OnNext(DISCONNECTED);
                 }
             }, pingToken.Token);
         }
@@ -150,12 +148,18 @@ namespace SummonEmployeeDashboard
         public void Dispose()
         {
             CloseConnection();
+            messageBus.OnNext("disconnected");
             pingToken.Cancel();
         }
 
         public IDisposable Subscribe(IObserver<SummonRequestUpdate> observer)
         {
-            return eventBus.Subscribe(observer);
+            return subject.Subscribe(observer);
+        }
+
+        public IDisposable SubscribeToMessage(IObserver<string> observer)
+        {
+            return messageBus.Subscribe(observer);
         }
     }
 }

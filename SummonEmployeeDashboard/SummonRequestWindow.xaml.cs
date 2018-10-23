@@ -21,7 +21,7 @@ namespace SummonEmployeeDashboard
     /// <summary>
     /// Логика взаимодействия для SummonRequestWindow.xaml
     /// </summary>
-    public partial class SummonRequestWindow : Window, IObserver<SummonRequestUpdate>
+    public partial class SummonRequestWindow : Window, IObserver<SummonRequestUpdate>, IObserver<string>
     {
         private SummonRequestVM viewModel;
 
@@ -34,7 +34,9 @@ namespace SummonEmployeeDashboard
             viewModel = new SummonRequestVM(true) { Request = request, CloseAction = () => { Close(); } };
             DataContext = viewModel;
             SystemSounds.Asterisk.Play();
-            App.GetApp().EventBus.Subscribe(this);
+            App app = App.GetApp();
+            app.EventBus.Subscribe(this);
+            app.EventBus.SubscribeToMessage(this);
         }
 
         public void OnCompleted()
@@ -55,6 +57,19 @@ namespace SummonEmployeeDashboard
                     }, null);
                     break;
                 case UpdateType.Cancel:
+                    syncContext.Post(o =>
+                    {
+                        Close();
+                    }, null);
+                    break;
+            }
+        }
+
+        public void OnNext(string value)
+        {
+            switch (value)
+            {
+                case EventBus.DISCONNECTED:
                     syncContext.Post(o =>
                     {
                         Close();

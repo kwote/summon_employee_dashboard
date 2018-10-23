@@ -15,5 +15,7 @@ namespace SummonEmployeeDashboard.Models
         public int CallerId { get; set; }
         [JsonProperty(PropertyName = "targetId")]
         public int TargetId { get; set; }
+        [JsonProperty(PropertyName = "comment")]
+        public string Comment { get; set; }
     }
 }

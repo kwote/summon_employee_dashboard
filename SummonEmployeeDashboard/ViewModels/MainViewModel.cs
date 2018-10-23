@@ -18,7 +18,7 @@ using System.Windows.Input;
 
 namespace SummonEmployeeDashboard.ViewModels
 {
-    class MainViewModel : INotifyPropertyChanged, IObserver<SummonRequestUpdate>
+    class MainViewModel : INotifyPropertyChanged, IObserver<SummonRequestUpdate>, IObserver<string>
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(MainViewModel));
         public Action CloseAction { get; set; }
@@ -128,7 +128,8 @@ namespace SummonEmployeeDashboard.ViewModels
             Initialize();
         }
         private AccessToken accessToken;
-        private IDisposable updateSubscription;
+        private IDisposable requestSubscription;
+        private IDisposable messageSubscription;
 
         private async void Initialize()
         {
@@ -146,7 +147,8 @@ namespace SummonEmployeeDashboard.ViewModels
                     ReloadRequests(false);
                     ReloadStatistics();
                     ReloadPeopleStatistics();
-                    updateSubscription = app.EventBus.Subscribe(this);
+                    requestSubscription = app.EventBus.Subscribe(this);
+                    messageSubscription = app.EventBus.SubscribeToMessage(this);
                     app.EventBus.Initialize(accessToken);
                     try
                     {
@@ -180,17 +182,19 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private async void Logout()
         {
+            if (!Active) return;
+            Active = false;
+            App app = App.GetApp();
             try
             {
-                App app = App.GetApp();
                 await app.GetService<PeopleService>().Logout(app.AccessToken.Id);
-                app.EventBus.Dispose();
-                Login();
             }
             catch (Exception e)
             {
                 log.Error("Failed to logout", e);
             }
+            app.EventBus.Dispose();
+            Login();
         }
 
         private bool CanLogout()
@@ -242,7 +246,8 @@ namespace SummonEmployeeDashboard.ViewModels
 
         private void Login()
         {
-            updateSubscription?.Dispose();
+            requestSubscription?.Dispose();
+            messageSubscription?.Dispose();
             var loginWindow = new LoginWindow();
             loginWindow.Show();
             CloseAction();
@@ -259,10 +264,25 @@ namespace SummonEmployeeDashboard.ViewModels
                         incomingRequestWindow.Show();
                         incomingRequestWindow.WindowState = WindowState.Normal;
                         incomingRequestWindow.ShowActivated = false;
+                        incomingRequestWindow.Topmost = true;
+                        //window.Focus();
                         incomingRequestWindow.Activate();
                     }, null);
                     break;
                 case UpdateType.Cancel:
+                    break;
+            }
+        }
+
+        public void OnNext(string value)
+        {
+            switch (value)
+            {
+                case EventBus.DISCONNECTED:
+                    syncContext.Post(o =>
+                    {
+                        Logout();
+                    }, null);
                     break;
             }
         }

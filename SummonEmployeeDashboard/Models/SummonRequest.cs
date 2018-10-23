@@ -24,6 +24,7 @@ namespace SummonEmployeeDashboard.Models
         private bool enabled;
         private Person caller;
         private Person target;
+        private string comment;
 
         [JsonProperty(PropertyName = "id")]
         public int Id
@@ -90,6 +91,15 @@ namespace SummonEmployeeDashboard.Models
             {
                 enabled = value;
                 OnPropertyChanged("Enabled");
+            }
+        }
+        [JsonProperty(PropertyName = "comment")]
+        public string Comment
+        {
+            get => comment; set
+            {
+                comment = value;
+                OnPropertyChanged("Comment");
             }
         }
 

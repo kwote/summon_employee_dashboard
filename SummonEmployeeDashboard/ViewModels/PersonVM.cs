@@ -20,7 +20,7 @@ namespace SummonEmployeeDashboard.ViewModels
         private Person person;
         public Person Person
         {
-            get { return person; }
+            get => person;
             set
             {
                 bool visibilityChanged = false;
@@ -39,6 +39,16 @@ namespace SummonEmployeeDashboard.ViewModels
                 {
                     OnPropertyChanged("FullName");
                 }
+            }
+        }
+
+        private string comment;
+        public string Comment
+        {
+            get => comment; set
+            {
+                comment = value;
+                OnPropertyChanged("Comment");
             }
         }
 
@@ -111,7 +121,8 @@ namespace SummonEmployeeDashboard.ViewModels
                 var add = new AddSummonRequest()
                 {
                     CallerId = accessToken.UserId,
-                    TargetId = person.Id
+                    TargetId = person.Id,
+                    Comment = Comment,
                 };
                 await app.GetService<SummonRequestService>().AddSummonRequest(add, accessToken.Id);
             }
